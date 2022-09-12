@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart TODO list app - Lists</title>
+</head>
+<body>
+    {% if latest_lists %}
+        <ul>
+        {% for list in latest_lists %}
+            <li><a href="/todo/{{ list.id }}/">{{ list.title_text }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No lists are available.</p>
+    {% endif %}
+</body>
+</html>
