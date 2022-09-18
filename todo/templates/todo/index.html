@@ -8,7 +8,7 @@
     {% if latest_lists %}
         <ul>
         {% for list in latest_lists %}
-            <li><a href="/todo/{{ list.id }}/">{{ list.title_text }}</a></li>
+            <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
