@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .topbar {
+            overflow: hidden;
+            background-color: #0fa662;
+        }
+
+        .topbar a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 10;
+            left: 0;
+            background-color: #dddddd;
+            overflow-x: hidden;
+            padding-top: 10px;
+            margin: 0;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #000000;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #0fa662;
+        }
+
+        .main {
+            margin-left: 200px; /* Same as the width of the sidenav */
+            font-size: 20px;
+            padding: 0px 20px;
+        }
+
+        .main a {
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .main a:hover {
+            color: #0fa662;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>To-Done</title>
+</head>
+<body>
+    <div class="topbar">
+        <a>List Templates</a>
+    </div>
+
+        <ul class="sidenav">
+            <li><a>Grocery</a></li>
+            <li><a>Regular Work Tasks</a></li>
+            <li><a>Weekly Chores</a></li>
+        </ul>
+
+        <div class="main">
+            <h2><a> Groceries</a></h2>
+            <ul>
+                <li>eggs</li>
+                <li>milk</li>
+                <li>cereal</li>
+                <li>bread</li>
+            </ul>
+        </div>
+</body>
+</html>

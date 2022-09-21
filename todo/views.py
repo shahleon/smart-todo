@@ -20,3 +20,6 @@ def listitems(request, list_id):
 
 def login(request):
     return render(request, 'todo/login.html')
+
+def list_templates(request):
+    return render(request, 'todo/list_templates.html')
