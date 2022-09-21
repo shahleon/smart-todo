@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To-Done</title>
+<style>
+    .topbar {
+        overflow: hidden;
+        background-color: #0fa662;
+        padding: 0px;
+    }
+
+    .topbar h2 {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding-left: 15px;
+        text-decoration: none;
+    }
+
+    h1 {
+        color: #0fa662;
+    }
+
+    body {
+      font-family: Calibri, Helvetica, sans-serif;
+      margin: 0;
+    }
+
+    button {
+        background-color: #0fa662;
+        width: 100%;
+        color: white;
+        padding: 15px;
+        margin: 10px 0px;
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    input[type=text], input[type=password] {
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px 20px;
+        display: inline-block;
+        border: 0px;
+        border-radius: 10px;
+        box-sizing: border-box;
+        box-shadow: 1px 1px 5px #555 inset;
+    }
+
+    button:hover {
+        opacity: 0.7;
+    }
+
+    .container {
+        margin: auto;
+        width: 400px;
+    }
+
+    .right {
+        float: right;
+    }
+</style>
 </head>
 <body>
-I am writing some placeholder text for Arjun.
+    <div class="topbar">
+        <h2>To-Done</h2>
+    </div>
+    <center> <h1>Login</h1> </center>
+    <form>
+        <div class="container">
+            <label>Username : </label>
+            <br>
+            <input type="text" placeholder="Enter Username" name="username" required>
+            <br>
+            <label>Password : </label>
+            <br>
+            <input type="password" placeholder="Enter Password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+            <br>
+            <input type="checkbox" checked="checked"> Remember me
+            <div class="right">Forgot <a href="#"> password? </a></div>
+        </div>
+        </form>
 </body>
 </html>
