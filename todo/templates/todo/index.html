@@ -56,6 +56,10 @@
             color: #0fa662;
         }
 
+        ul li:hover {
+          background: #ddd;
+        }
+
         .main {
             margin-left: 200px; /* Same as the width of the sidenav */
             font-size: 20px;
@@ -214,12 +218,12 @@
                 </div>
 
                 <ul id="myUL">
-                    <li>Hit the gym<span class="close">x</span></li>
-                    <li class="checked">Pay bills<span class="close">x</span></li>
-                    <li>Meet George<span class="close">x</span></li>
-                    <li>Buy eggs<span class="close">x</span></li>
-                    <li>Read a book<span class="close">x</span></li>
-                    <li>Organize office<span class="close">x</span></li>
+                    <li class="listItem">Hit the gym<span class="close">x</span></li>
+                    <li class="checked listItem">Pay bills<span class="close">x</span></li>
+                    <li class="listItem">Meet George<span class="close">x</span></li>
+                    <li class="listItem">Buy eggs<span class="close">x</span></li>
+                    <li class="listItem">Read a book<span class="close">x</span></li>
+                    <li class="listItem">Organize office<span class="close">x</span></li>
                 </ul>
             {% endfor %}
         </div>
@@ -240,7 +244,7 @@ for (i = 0; i < close.length; i++) {
 }
 
 // Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
+var list = document.getElementById("myUL");
 list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
     ev.target.classList.toggle('checked');
@@ -253,6 +257,7 @@ function newElement() {
   var inputValue = document.getElementById("myInput").value;
   var t = document.createTextNode(inputValue);
   li.appendChild(t);
+  li.className = "listItem";
   if (inputValue === '') {
     alert("You must write something!");
   } else {
