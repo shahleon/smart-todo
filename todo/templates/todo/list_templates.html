@@ -3,7 +3,7 @@
 <head>
     <style>
         body {
-            font-family: Arial;
+            font-family: Calibri, Helvetica, sans-serif;
             margin: 0;
         }
 
@@ -17,15 +17,20 @@
             background-color: #0fa662;
         }
 
-        .topbar a {
+        .topbar h2 {
             float: left;
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding-left: 15px;
             text-decoration: none;
-            font-size: 20px;
         }
 
+        .sidenav hr {
+            height: 2px;
+            background-color: #0fa662;
+            border: none;
+            width: 87%;
+        }
 
         .sidenav {
             height: 100%;
@@ -33,7 +38,7 @@
             position: fixed;
             top: 10;
             left: 0;
-            background-color: #dddddd;
+            background-color: #eee;
             overflow-x: hidden;
             padding-top: 10px;
             margin: 0;
@@ -51,6 +56,10 @@
             color: #0fa662;
         }
 
+        ul li:hover {
+          background: #ddd;
+        }
+
         .main {
             margin-left: 200px; /* Same as the width of the sidenav */
             font-size: 20px;
@@ -59,35 +68,205 @@
 
         .main a {
             text-decoration: none;
-            color: #000000;
+            color: #0fa662;
+            float: left;
+            padding-bottom: 15px;
         }
 
-        .main a:hover {
-            color: #0fa662;
+        /* Include the padding and border in an element's total width and height */
+        .main * {
+          box-sizing: border-box;
+        }
+
+        /* Remove margins and padding from the list */
+        .main ul {
+          margin: 0;
+          padding: 0;
+        }
+
+        /* Style the list items */
+        .main ul li {
+          cursor: pointer;
+          position: relative;
+          padding: 12px 8px 12px 40px;
+          list-style-type: none;
+          background: #f9f9f9;
+          font-size: 18px;
+          transition: 0.2s;
+          border-radius: 10px; /* does rounded edges on list items */
+
+          /* make the list items unselectable */
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+
+        /* Darker background-color on hover */
+        .main ul li:hover {
+          background: #ddd;
+        }
+
+        /* When clicked on, add a background color and strike out text */
+        .main ul li.checked {
+          background: #ccc;
+          color: #fff;
+          text-decoration: line-through;
+        }
+
+        /* Add a "checked" mark when clicked on */
+        .main ul li.checked::before {
+          content: '';
+          position: absolute;
+          border-color: #fff;
+          border-style: solid;
+          border-width: 0 2px 2px 0;
+          top: 10px;
+          left: 16px;
+          transform: rotate(45deg);
+          height: 15px;
+          width: 7px;
+        }
+
+        /* Style the close button */
+        .main .close {
+          position: absolute;
+          right: 0;
+          top: 0;
+          padding: 12px 16px 12px 16px;
+          border-radius: 10px;
+        }
+
+        .main .close:hover {
+          background-color: #f44336;
+          color: white;
+        }
+
+        /* Style the header */
+        .main .header {
+          color: white;
+          display: block;
+        }
+
+        /* Clear floats after the header */
+        .main .header:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+
+        /* Style the input */
+        .main input {
+          border:none;
+          border-radius: 10px;
+          width: 75%;
+          padding: 10px;
+          float: left;
+          font-size: 16px;
+          box-shadow: 1px 1px 5px #555 inset;
+          white-space: nowrap;
+          display: block;
+        }
+
+        /* Style the "Add" button */
+        .main .addBtn {
+          padding: 9px;
+          width: 25%;
+          background: #d9d9d9;
+          color: #555;
+          float: left;
+          text-align: center;
+          font-size: 16px;
+          cursor: pointer;
+          transition: 0.3s;
+          border-radius: 10px;
+          display: inline-block
+        }
+
+        .main .addBtn:hover {
+          background-color: #bbb;
         }
     </style>
     <meta charset="UTF-8">
-    <title>To-Done</title>
+    <title>Saved Templates</title>
 </head>
 <body>
     <div class="topbar">
-        <a>List Templates</a>
+        <h2>Saved Templates</h2>
     </div>
 
-        <ul class="sidenav">
-            <li><a>Grocery</a></li>
-            <li><a>Regular Work Tasks</a></li>
-            <li><a>Weekly Chores</a></li>
-        </ul>
+    <ul class="sidenav">
+        <li><a>Groceries</a></li>
+        <li><a>Chores</a></li>
+        <li><a>Flight Check</a></li>
+    </ul>
 
-        <div class="main">
-            <h2><a> Groceries</a></h2>
-            <ul>
-                <li>eggs</li>
-                <li>milk</li>
-                <li>cereal</li>
-                <li>bread</li>
-            </ul>
+    <div class="main">
+        <div id="myDIV" class="header">
+            <h2><a> Groceries </a></h2>
+            <br>
+            <br>
+            <br>
+            <input type="text" id="myInput" placeholder="New Task">
+            <span onclick="newElement()" class="addBtn">Add</span>
         </div>
+        <ul id="myUL">
+            <li class="listItem">Butter<span class="close">x</span></li>
+            <li class="checked listItem">3lbs Bone-in Skin-on Chicken Thighs<span class="close">x</span></li>
+            <li class="listItem">Paprika<span class="close">x</span></li>
+            <li class="listItem">Yellow Onions<span class="close">x</span></li>
+            <li class="listItem">Roma tomatoes<span class="close">x</span></li>
+            <li class="listItem">Hungarian bell pepper<span class="close">x</span></li>
+        </ul>
+    </div>
+
+
 </body>
+<script>
+// Click on a close button to hide the current list item
+var close = document.getElementsByClassName("close");
+var i;
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function() {
+    var div = this.parentElement;
+    div.style.display = "none";
+  }
+}
+
+// Add a "checked" symbol when clicking on a list item
+var list = document.getElementById("myUL");
+list.addEventListener('click', function(ev) {
+  if (ev.target.tagName === 'LI') {
+    ev.target.classList.toggle('checked');
+  }
+}, false);
+
+// Create a new list item when clicking on the "Add" button
+function newElement() {
+  var li = document.createElement("li");
+  var inputValue = document.getElementById("myInput").value;
+  var t = document.createTextNode(inputValue);
+  li.appendChild(t);
+  li.className = "listItem";
+  if (inputValue === '') {
+    alert("You must write something!");
+  } else {
+    document.getElementById("myUL").appendChild(li);
+  }
+  document.getElementById("myInput").value = "";
+
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+  span.className = "close";
+  span.appendChild(txt);
+  li.appendChild(span);
+
+  for (i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.style.display = "none";
+    }
+  }
+}
+</script>
 </html>
