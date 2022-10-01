@@ -28,6 +28,8 @@ class User(models.Model):
     user_name = models.CharField(max_length=100)
     password = models.CharField(max_length=50)
 
+    objects = models.Manager()
+
     def __str__(self):
         return "%s" % self.user_name
 
