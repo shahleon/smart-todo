@@ -16,9 +16,18 @@ class ListItem(models.Model):
     item_text = models.CharField(max_length=100)
     is_done = models.BooleanField(default=False)
     created_on = models.DateTimeField()
+    updated_on = models.DateTimeField()
     list = models.ForeignKey(List, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
     def __str__(self):
         return "%s: %s" % (self.item_text, self.is_done)
+
+
+class User(models.Model):
+    user_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "%s" % self.user_name

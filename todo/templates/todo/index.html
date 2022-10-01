@@ -56,12 +56,54 @@
             color: #0fa662;
         }
 
+        .rightsidebar hr {
+            height: 2px;
+            background-color: #0fa662;
+            border: none;
+            width: 87%;
+        }
+
+        .rightsidebar {
+            height: 100%;
+            width: 400px;
+            margin-top: 80px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #eee;
+            overflow-x: hidden;
+            padding-top: 10px;
+            padding-right: 10px;
+            {#margin: 0;#}
+        }
+
+        .rightsidebar a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #000000;
+            display: block;
+        }
+
+        .rightsidebar form {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #000000;
+            display: block;
+        }
+
+        .rightsidebar a:hover {
+            color: #0fa662;
+        }
+
         ul li:hover {
           background: #ddd;
         }
 
         .main {
             margin-left: 200px; /* Same as the width of the sidenav */
+            margin-right: 400px; /* Same as the width of the sidenav */
             font-size: 20px;
             padding: 0px 20px;
         }
@@ -155,8 +197,8 @@
           clear: both;
         }
 
-        /* Style the input */
-        .main input {
+        /* Style the input text*/
+        .main input[type=text] {
           border:none;
           border-radius: 10px;
           width: 75%;
@@ -166,6 +208,17 @@
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
           display: block;
+        }
+
+        /* Style the input checkbox within unordered list item */
+        .main ul li input[type=checkbox] {
+          position: absolute;
+          left: 2px;
+          top: 12px;
+          width: 20px;
+          height: 20px;
+          padding: 12px 16px 12px 16px;
+          border-radius: 10px;
         }
 
         /* Style the "Add" button */
@@ -218,7 +271,11 @@
                 </div>
 
                 <ul id="myUL">
-                    <li class="listItem">Hit the gym<span class="close">x</span></li>
+                    <li class="listItem">
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                        <label for="vehicle1">Hit the gym</label>
+                        <span class="close">x</span>
+                    </li>
                     <li class="checked listItem">Pay bills<span class="close">x</span></li>
                     <li class="listItem">Meet George<span class="close">x</span></li>
                     <li class="listItem">Buy eggs<span class="close">x</span></li>
@@ -227,6 +284,20 @@
                 </ul>
             {% endfor %}
         </div>
+
+        <ul class="rightsidebar">
+            <li><a>Item name</a></li>
+            <li><a>Create on</a></li>
+            <li><a>Update on</a></li>
+            <form action="/" mthod="post">
+                  <p><label for="note">Note:</label></p>
+                  <textarea id="note" name="note" rows="4" cols="50">
+
+                  </textarea>
+                  <br>
+                  <input type="submit" value="Save/Update">
+            </form>
+        </ul>
 
         {% else %}
         <p>+ Create List</p>
@@ -244,12 +315,42 @@ for (i = 0; i < close.length; i++) {
 }
 
 // Add a "checked" symbol when clicking on a list item
+{#var list = document.getElementById("myUL");#}
+{#list.addEventListener('click', function(ev) {#}
+{#  if (ev.target.tagName === 'LI') {#}
+{#    ev.target.classList.toggle('checked');#}
+{#  }#}
+{#, false);#}
+
+// Add a "checked" symbol when clicking on a list item
 var list = document.getElementById("myUL");
 list.addEventListener('click', function(ev) {
   if (ev.target.tagName === 'LI') {
     ev.target.classList.toggle('checked');
+    // show list item name and its note in the right-side bar
+
   }
 }, false);
+
+
+var listItemsCheckBoxes = document.querySelectorAll("input[type=checkbox]");
+{#let enabledSettings = []#}
+/*
+For IE11 support, replace arrow functions with normal functions and
+use a polyfill for Array.forEach:
+https://vanillajstoolkit.com/polyfills/arrayforeach/
+*/
+
+// Use Array.forEach to add an event listener to each checkbox.
+listItemsCheckBoxes.forEach(function(checkbox) {
+  checkbox.addEventListener('change', function() {
+      console.log(this.parent.tagName)
+      this.parent.classList.toggle('checked')
+    if(this.checked) {
+
+    }
+  })
+});
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
