@@ -34,7 +34,7 @@ class ListItem(models.Model):
         return "%s: %s" % (self.item_text, self.is_done)
 
 
-class UserTodoTemplate(models.Model):
+class Template(models.Model):
     title_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
     updated_on = models.DateTimeField()
@@ -48,7 +48,7 @@ class UserTodoTemplate(models.Model):
 class TemplateItem(models.Model):
     item_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
-    template = models.ForeignKey(UserTodoTemplate, on_delete=models.CASCADE)
+    template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
     objects = models.Manager()
 

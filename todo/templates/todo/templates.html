@@ -18,7 +18,7 @@
         }
 
         .topbar h2 {
-            float: left;
+            float: center;
             color: #f2f2f2;
             text-align: center;
             padding-left: 15px;
@@ -61,7 +61,7 @@
         }
 
         .main {
-            margin-left: 200px; /* Same as the width of the sidenav */
+            margin-left: 0px; /* Same as the width of the sidenav */
             font-size: 20px;
             padding: 0px 20px;
         }
@@ -186,40 +186,50 @@
         .main .addBtn:hover {
           background-color: #bbb;
         }
+
+        .amazon-button {
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+            background: #0fa662;
+            border: 1px solid #FCD200;
+            font-size: 13px;
+            height: 31px;
+            padding: 0 11px;
+            text-align: center;
+            width: 100%;
+            min-width: 200px;
+            font-weight: 500;
+            color: #0F1111;
+            :hover{
+                background: #bbb;
+                border-color: #F2C200;
+                box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+            }
+        }
     </style>
     <meta charset="UTF-8">
-    <title>Saved Templates</title>
+    <title>Available Templates</title>
 </head>
 <body>
     <div class="topbar">
-        <h2>Saved Templates</h2>
+        <h2>Available Templates</h2>
     </div>
-
-    <ul class="sidenav">
-        <li><a>Groceries</a></li>
-        <li><a>Chores</a></li>
-        <li><a>Flight Check</a></li>
-    </ul>
 
     <div class="main">
-        <div id="myDIV" class="header">
-            <h2><a> Groceries </a></h2>
-            <br>
-            <br>
-            <br>
-            <input type="text" id="myInput" placeholder="New Task">
-            <span onclick="newElement()" class="addBtn">Add</span>
-        </div>
-        <ul id="myUL">
-            <li class="listItem">Butter<span class="close">x</span></li>
-            <li class="checked listItem">3lbs Bone-in Skin-on Chicken Thighs<span class="close">x</span></li>
-            <li class="listItem">Paprika<span class="close">x</span></li>
-            <li class="listItem">Yellow Onions<span class="close">x</span></li>
-            <li class="listItem">Roma tomatoes<span class="close">x</span></li>
-            <li class="listItem">Hungarian bell pepper<span class="close">x</span></li>
-        </ul>
+        {% for template in templates %}
+            <h3 style="text-align: center">{{ template.title_text }}</h3>
+            <ul id="myUL">
+                {% for template_item in template.templateitem_set.all %}
+                    <li>{{ template_item.item_text }}</li>
+                {% endfor %}
+                <button class="amazon-button" onclick="">Use This Template</button>
+            </ul>
+        <br/>
+        {% endfor %}
     </div>
-
 
 </body>
 <script>
@@ -234,12 +244,12 @@ for (i = 0; i < close.length; i++) {
 }
 
 // Add a "checked" symbol when clicking on a list item
-var list = document.getElementById("myUL");
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-  }
-}, false);
+<!--var list = document.getElementById("myUL");-->
+<!--list.addEventListener('click', function(ev) {-->
+<!--  if (ev.target.tagName === 'LI') {-->
+<!--    ev.target.classList.toggle('checked');-->
+<!--  }-->
+<!--}, false);-->
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
