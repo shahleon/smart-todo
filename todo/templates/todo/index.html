@@ -152,23 +152,29 @@
         /* When clicked on, add a background color and strike out text */
         .main ul li.checked {
           background: #ccc;
-          color: #fff;
+          color: #aaa;
+          {#text-decoration: line-through;#}
+        }
+
+        .main ul li.done {
+          {#background: #ccc;#}
+          {#color: #fff;#}
           text-decoration: line-through;
         }
 
         /* Add a "checked" mark when clicked on */
-        .main ul li.checked::before {
-          content: '';
-          position: absolute;
-          border-color: #fff;
-          border-style: solid;
-          border-width: 0 2px 2px 0;
-          top: 10px;
-          left: 16px;
-          transform: rotate(45deg);
-          height: 15px;
-          width: 7px;
-        }
+        {#.main ul li.checked::before {#}
+        {#  content: '';#}
+        {#  position: absolute;#}
+        {#  border-color: #fff;#}
+        {#  border-style: solid;#}
+        {#  border-width: 0 2px 2px 0;#}
+        {#  top: 10px;#}
+        {#  left: 16px;#}
+        {#  transform: rotate(45deg);#}
+        {#  height: 15px;#}
+        {#  width: 7px;#}
+        {#}#}
 
         /* Style the close button */
         .main .close {
@@ -285,7 +291,7 @@
             {% endfor %}
         </div>
 
-        <ul class="rightsidebar">
+        <ul class="rightsidebar" id = "rightsidebar">
             <li><a>Item name</a></li>
             <li><a>Create on</a></li>
             <li><a>Update on</a></li>
@@ -322,14 +328,32 @@ for (i = 0; i < close.length; i++) {
 {#  }#}
 {#, false);#}
 
-// Add a "checked" symbol when clicking on a list item
+// When click a list item, restore all othe
 var list = document.getElementById("myUL");
+var global_count = 1
 list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-    // show list item name and its note in the right-side bar
+    if (ev.target.tagName === 'LI') {
+        {#ev.target.classList.toggle('checked');#}
+        // restore all other checked list items
+        for(let i = 0; i < list.children.length; i++)
+        {
+            if(list.children[i].classList.contains('checked') && list.children[i] !== ev.target)
+            {
+                list.children[i].classList.remove('checked')
+            }
+        }
+        // show list item name and its note in the right-side bar
 
-  }
+        // TODO access database and get list and list item info
+
+        // Change the content of right-side bar
+        ev.target.classList.toggle('checked');
+        var rightsidebar = document.getElementById("rightsidebar")
+        var title_li_node = rightsidebar.children[1]
+        var text_node = title_li_node.children[0]
+        text_node.innerHTML = "Item Name: Gym"
+        {#global_count++#}
+    }
 }, false);
 
 
@@ -344,40 +368,61 @@ https://vanillajstoolkit.com/polyfills/arrayforeach/
 // Use Array.forEach to add an event listener to each checkbox.
 listItemsCheckBoxes.forEach(function(checkbox) {
   checkbox.addEventListener('change', function() {
-      console.log(this.parent.tagName)
-      this.parent.classList.toggle('checked')
-    if(this.checked) {
-
+    {#console.log(this.parentElement.tagName)#}
+    if (this.parentElement.tagName === 'LI') {
+        this.parentElement.classList.toggle('done');
+        // TODO need to add database update when checked
     }
   })
 });
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
-  var li = document.createElement("li");
-  var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
-  li.appendChild(t);
-  li.className = "listItem";
-  if (inputValue === '') {
+    var li = document.createElement("li");
+    var inputValue = document.getElementById("myInput").value;
+    {#var t = document.createTextNode(inputValue);#}
+    {#li.appendChild(t);#}
+    li.className = "listItem";
+    if (inputValue === '') {
     alert("You must write something!");
-  } else {
+    } else {
     document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
-
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
     }
-  }
+    document.getElementById("myInput").value = "";
+
+    // add checkbox element
+    var itemCheckBox = document.createElement("input")
+    itemCheckBox.type = "checkbox"
+    // id and name should be unique, currently I set it to be list_name + item_name
+    var itemName = "ListName" + inputValue
+    itemCheckBox.id = itemName
+    itemCheckBox.name = itemName
+    itemCheckBox.value = itemName
+    itemCheckBox.addEventListener('change', function() {
+        if (this.parentElement.tagName === 'LI') {
+            this.parentElement.classList.toggle('done');
+            // TODO need to add database update when checked
+        }
+    })
+
+    var itemLabel = document.createElement("label")
+    itemLabel.htmlFor  = itemName
+    itemLabel.innerHTML = itemName
+    li.append(itemCheckBox)
+    li.append(itemLabel)
+
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    li.appendChild(span);
+
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function() {
+          var div = this.parentElement;
+          div.style.display = "none";
+        }
+    }
 }
 </script>
 </html>
