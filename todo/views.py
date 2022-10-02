@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404
 from todo.models import List
+from todo.models import UserTodoTemplate
 
 
 def index(request):
@@ -18,8 +19,14 @@ def listitems(request, list_id):
         raise Http404("List does not exist")
     return render(request, 'todo/list_items.html', {'list': todo_list})
 
+
 def login(request):
     return render(request, 'todo/login.html')
 
+
 def list_templates(request):
-    return render(request, 'todo/list_templates.html')
+    try:
+        templates = UserTodoTemplate.objects.order_by('-updated_on')[:5]
+    except UserTodoTemplate.DoesNotExist:
+        raise Http404("Templates do not exist")
+    return render(request, 'todo/list_templates.html', {'templates': templates})
