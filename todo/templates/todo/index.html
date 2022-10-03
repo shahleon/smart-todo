@@ -248,64 +248,59 @@
         <h2>To-Done</h2>
     </div>
 
-    {% if latest_lists %}
-        <ul class="sidenav">
-            <li><a>Today</a></li>
-            <li><a>This Week</a></li>
-            <li><a>This Month</a></li>
-            <hr>
-            {% for list in latest_lists %}
-                <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
-            {% endfor %}
-            <hr>
-            {% for template in templates %}
-                <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
-            {% endfor %}
-        </ul>
+    <ul class="sidenav">
+        <li><a>Today</a></li>
+        <li><a>This Week</a></li>
+        <li><a>This Month</a></li>
+        <hr>
+        {% for list in latest_lists %}
+            <li><a href="todo/{{ list.id }}">{{ list.title_text }}</a></li>
+        {% endfor %}
+        <hr>
+        {% for template in templates %}
+            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
+        {% endfor %}
+    </ul>
 
-        <div class="main">
-            {% for list in latest_lists %}
-                <div id="myDIV" class="header">
-                    <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
-                    <br>
-                    <br>
-                    <br>
-                    <input type="text" id="myInput" placeholder="New Task">
-                    <span onclick="newElement()" class="addBtn">Add</span>
-                </div>
+    <div class="main">
+        {% for list in latest_lists %}
+            <div id="myDIV" class="header">
+                <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
+                <br>
+                <br>
+                <br>
+                <input type="text" id="myInput" placeholder="New Task">
+                <span onclick="newElement()" class="addBtn">Add</span>
+            </div>
 
-                <ul id="myUL">
-                    <li class="listItem">
-                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                        <label for="vehicle1">Hit the gym</label>
-                        <span class="close">x</span>
-                    </li>
-                    <li class="checked listItem">Pay bills<span class="close">x</span></li>
-                    <li class="listItem">Meet George<span class="close">x</span></li>
-                    <li class="listItem">Buy eggs<span class="close">x</span></li>
-                    <li class="listItem">Read a book<span class="close">x</span></li>
-                    <li class="listItem">Organize office<span class="close">x</span></li>
-                </ul>
-            {% endfor %}
-        </div>
+            <ul id="myUL">
+                <li class="listItem">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <label for="vehicle1">Hit the gym</label>
+                    <span class="close">x</span>
+                </li>
+                <li class="checked listItem">Pay bills<span class="close">x</span></li>
+                <li class="listItem">Meet George<span class="close">x</span></li>
+                <li class="listItem">Buy eggs<span class="close">x</span></li>
+                <li class="listItem">Read a book<span class="close">x</span></li>
+                <li class="listItem">Organize office<span class="close">x</span></li>
+            </ul>
+        {% endfor %}
+    </div>
 
-        <ul class="rightsidebar">
-            <li><a>Item name</a></li>
-            <li><a>Create on</a></li>
-            <li><a>Update on</a></li>
-            <form action="/" method="post">
-                  <p><label for="note">Note:</label></p>
-                  <textarea id="note" name="note" rows="4" cols="50">
+    <ul class="rightsidebar">
+        <li><a>Item name</a></li>
+        <li><a>Create on</a></li>
+        <li><a>Update on</a></li>
+        <form action="/" method="post">
+              <p><label for="note">Note:</label></p>
+              <textarea id="note" name="note" rows="4" cols="50">
 
-                  </textarea>
-                  <br>
-                  <input type="submit" value="Save/Update">
-            </form>
-        </ul>
-
-        {% else %}
-        <p>+ Create List</p>
-    {% endif %}
+              </textarea>
+              <br>
+              <input type="submit" value="Save/Update">
+        </form>
+    </ul>
 </body>
 <script>
 // Click on a close button to hide the current list item

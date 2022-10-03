@@ -1,8 +1,7 @@
-from django.shortcuts import render
-from django.http import Http404
-from todo.models import List
-from todo.models import Template
-
+from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.http import HttpResponseRedirect
+from todo.models import List, ListItem, Template, TemplateItem
+from django.utils import timezone
 
 def index(request):
     latest_lists = List.objects.order_by('-updated_on')[:5]
@@ -15,11 +14,20 @@ def index(request):
 
 
 def listitems(request, list_id):
-    try:
-        todo_list = List.objects.get(pk=list_id)
-    except List.DoesNotExist:
-        raise Http404("List does not exist")
+    todo_list = get_list_or_404(List, pk=list_id)
     return render(request, 'todo/list_items.html', {'list': todo_list})
+
+
+def todo_from_template(request):
+    template_id = request.POST['template']
+    fetched_template = get_object_or_404(Template, pk=template_id)
+    todo = List.objects.create(
+        title_text=fetched_template.title_text,
+        created_on=timezone.now(),
+        updated_on=timezone.now()
+        # user_id=1 // TODO: assign this to a user
+    )
+    return HttpResponseRedirect(str(todo.id))
 
 
 def login(request):
@@ -27,8 +35,12 @@ def login(request):
 
 
 def template(request, template_id):
-    try:
-        fetched_template = Template.objects.get(pk=template_id)
-    except Template.DoesNotExist:
-        raise Http404("Template does not exist")
-    return render(request, 'todo/template.html', {'template': fetched_template})
+    latest_lists = List.objects.order_by('-updated_on')[:5]
+    saved_templates = Template.objects.order_by('created_on')
+    fetched_template = get_object_or_404(Template, pk=template_id)
+    context = {
+        'latest_lists': latest_lists,
+        'templates': saved_templates,
+        'template': fetched_template
+    }
+    return render(request, 'todo/template.html', context)

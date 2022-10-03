@@ -10,6 +10,7 @@ class User(models.Model):
     def __str__(self):
         return "%s" % self.user_name
 
+
 class List(models.Model):
     title_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()

@@ -18,7 +18,7 @@
         }
 
         .topbar h2 {
-            float: center;
+            float: left;
             color: #f2f2f2;
             text-align: center;
             padding-left: 15px;
@@ -61,7 +61,7 @@
         }
 
         .main {
-            margin-left: 0px; /* Same as the width of the sidenav */
+            margin-left: 200px; /* Same as the width of the sidenav */
             font-size: 20px;
             padding: 0px 20px;
         }
@@ -156,7 +156,7 @@
         }
 
         /* Style the input */
-        .main input {
+        .main input[type=text] {
           border:none;
           border-radius: 10px;
           width: 75%;
@@ -166,6 +166,17 @@
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
           display: block;
+        }
+
+        /* Style the input checkbox within unordered list item */
+        .main ul li input[type=checkbox] {
+          position: absolute;
+          left: 2px;
+          top: 12px;
+          width: 20px;
+          height: 20px;
+          padding: 12px 16px 12px 16px;
+          border-radius: 10px;
         }
 
         /* Style the "Add" button */
@@ -211,12 +222,26 @@
         }
     </style>
     <meta charset="UTF-8">
-    <title>Template Detail</title>
+    <title>To-Done</title>
 </head>
 <body>
     <div class="topbar">
-        <h2>Template detail</h2>
+        <h2>To-Done</h2>
     </div>
+
+    <ul class="sidenav">
+        <li><a>Today</a></li>
+        <li><a>This Week</a></li>
+        <li><a>This Month</a></li>
+        <hr>
+        {% for list in latest_lists %}
+            <li><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></li>
+        {% endfor %}
+        <hr>
+        {% for template in templates %}
+            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
+        {% endfor %}
+    </ul>
 
     <div class="main">
         <h3 style="text-align: center">{{ template.title_text }}</h3>
@@ -224,7 +249,11 @@
             {% for template_item in template.templateitem_set.all %}
                 <li>{{ template_item.item_text }}</li>
             {% endfor %}
-            <button class="amazon-button" onclick="">Use This Template</button>
+            <form action="/todo/new-from-template" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="template" id="template-{{ template.id }}" value="{{ template.id }}">
+                <button class="amazon-button" onclick="">Use This Template</button>
+            </form>
         </ul>
     </div>
 
