@@ -12,4 +12,5 @@ urlpatterns = [
     path('getListItemByName', views.getListItemByName, name='getListItemByName'),
     path('markListItem', views.markListItem, name='markListItem'),
     path('addNewListItem', views.addNewListItem, name='addNewListItem'),
+    path('updateListItem', views.updateListItem, name='updateListItem'),
 ]

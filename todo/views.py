@@ -6,6 +6,7 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction, IntegrityError
 
+from todo.forms import UpdateItemTextForm
 from todo.models import List, ListItem
 
 
@@ -35,15 +36,19 @@ def list_templates(request):
     return render(request, 'todo/list_templates.html')
 
 
+@csrf_exempt
 def updateListItem(request):
     if request.method == 'POST':
-        post_id = request.GET['post_id']
+        form = UpdateItemTextForm(request.POST)
+        if form.is_valid():
+            print("form valid")
         # post_request = HttpRequest.POST.get()
         # m = Like(post=likedpost) # Creating Like Object
         # m.save()  # saving it to store in database
-        return HttpResponse("Success!")  # Sending an success response
+        return redirect("index")
     else:
         return HttpResponse("Request method is not a Post")
+
 
 @csrf_exempt
 def addNewListItem(request):
@@ -73,7 +78,32 @@ def addNewListItem(request):
 
 @csrf_exempt
 def markListItem(request):
+    """
+    Mark a list item as done or undo it
+    """
     if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        list_id = body['list_id']
+        list_item_name = body['list_item_name']
+        list_item_id = body['list_item_id']
+        # remove the first " and last "
+        list_item_is_done = True
+        is_done_str = str(body['is_done'])
+        print("is_done: " + str(body['is_done']))
+        if is_done_str == "0" or is_done_str == "False" or is_done_str == "false":
+            list_item_is_done = False
+        try:
+            with transaction.atomic():
+                query_list = List.objects.get(id=list_id)
+                query_item = ListItem.objects.get(id=list_item_id)
+                query_item.is_done = list_item_is_done
+                query_item.save()
+                # Sending an success response
+                return JsonResponse({'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+        except IntegrityError:
+            print("query list item" + str(list_item_name) + " failed!")
+            JsonResponse({})
         return HttpResponse("Success!")  # Sending an success response
     else:
         return HttpResponse("Request method is not a Post")
@@ -86,7 +116,7 @@ def getListItemByName(request):
         list_id = body['list_id']
         list_item_name = body['list_item_name']
         # remove the first " and last "
-        list_item_name = list_item_name
+        # list_item_name = list_item_name
 
         print("list_id: " + list_id)
         print("list_item_name: " + list_item_name)

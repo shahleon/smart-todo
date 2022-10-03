@@ -314,11 +314,19 @@
                 <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
                     {% for list_item in latest_list_items %}
                         {% if list_item.list_id == list.id %}
-                            <li class="listItem">
-                                <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
-                                <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
-                                <span class="close">x</span>
-                            </li>
+                            {% if not list_item.is_done %}
+                                <li class="listItem">
+                            {% else %}
+                                <li class="listItem done">
+                            {% endif %}
+                            {% if not list_item.is_done %}
+                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
+                            {% else %}
+                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
+                            {% endif %}
+                                    <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                    <span class="close">x</span>
+                                </li>
                         {% endif %}
                     {% endfor %}
 {#                    <li class="listItem">#}
@@ -338,14 +346,15 @@
         <ul class="rightsidebar" id = "rightsidebar">
             <li><a>List name</a></li>
             <li><a>Item name</a></li>
-            <li><a>Update on</a></li>
-            <form action="/" mthod="post">
-                  <p><label for="note">Note:</label></p>
-                  <textarea id="note" name="note" rows="4" cols="50">
+            <li hidden><a></a></li>
+            <form action="/updateListItem" method="post">
+                <p id="hidden_item_id" hidden>id</p>
+                <p><label for="note">Note:</label></p>
+                <textarea id="note" name="note" rows="4" cols="50">
 
-                  </textarea>
-                  <br>
-                  <input type="submit" value="Save/Update">
+                </textarea>
+                <br>
+                <input type="submit" value="Save/Update">
             </form>
         </ul>
 
@@ -445,7 +454,10 @@ function markListItemByName() {
         this.parentElement.classList.toggle('done');
         // TODO need to remove the list item from database
         var item_name = this.nextElementSibling.innerHTML
-        var list_id = this.parentElement.parentElement.id
+        // List_{id}
+        var list_id = this.parentElement.parentElement.id.toString().substring(5)
+        // ListItem_{id}
+        var list_item_id = this.id.toString().substring(9)
         var httpRequest = new XMLHttpRequest()
         var is_done = this.parentElement.classList.contains('done')
         httpRequest.open('POST', 'markListItem');
@@ -454,6 +466,7 @@ function markListItemByName() {
             "list_id": list_id,
             "list_item_name": item_name,
             "is_done": is_done,
+            "list_item_id": list_item_id
         }
         httpRequest.send(JSON.stringify(params))
     }
