@@ -282,6 +282,7 @@
     <title>To-Done</title>
 </head>
 <body>
+    {% load todo_extras %}
     <div class="topbar">
         <h2>To-Done</h2>
     </div>
@@ -307,16 +308,15 @@
                     <br>
                     <br>
                     <br>
-                    <input type="text" id="myInput" placeholder="New Task">
-                    <span id="{{ list.id }}" onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                    <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
                 </div>
-
-                <ul id="{{ list.id }}" class="listItemsUnorderedList">
+                <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
                     {% for list_item in latest_list_items %}
                         {% if list_item.list_id == list.id %}
                             <li class="listItem">
-                                <input type="checkbox" id="{{ list_item.id }}" name="{{ list_item.id }}" value="{{ list_item.item_text }}">
-                                <label for="list_item.id">"{{ list_item.item_name }}"</label>
+                                <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
                                 <span class="close">x</span>
                             </li>
                         {% endif %}
@@ -390,7 +390,8 @@ for(let i = 0; i < list.length; i++) {
 
             // TODO access database and get list and list item info
             var item_name = ev.target.children[1].innerHTML
-            var list_id = ev.target.parentElement.id
+            // this list id will look like List_{id}, so remove the first five letters
+            var list_id = ev.target.parentElement.id.substring(5)
             var httpRequest = new XMLHttpRequest()
             {#httpRequest.onreadystatechange = alertContents;#}
             httpRequest.onreadystatechange = function() {
@@ -438,18 +439,19 @@ use a polyfill for Array.forEach:
 https://vanillajstoolkit.com/polyfills/arrayforeach/
 */
 
+// mark item as done or undo it
 function markListItemByName() {
     if (this.parentElement.tagName === 'LI') {
         this.parentElement.classList.toggle('done');
         // TODO need to remove the list item from database
-        var item_name = this.children[1].innerHTML
-        var list_id = this.parentElement.value
+        var item_name = this.nextElementSibling.innerHTML
+        var list_id = this.parentElement.parentElement.id
         var httpRequest = new XMLHttpRequest()
         var is_done = this.parentElement.classList.contains('done')
         httpRequest.open('POST', 'markListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
-            "list_name": inputValue,
+            "list_id": list_id,
             "list_item_name": item_name,
             "is_done": is_done,
         }
@@ -463,14 +465,19 @@ listItemsCheckBoxes.forEach(function(checkbox) {
   checkbox.addEventListener('change', markListItemByName)
 });
 
+
+// The naming convention of List is "List_" + list.id
+// The naming convention of ListItem is "ListItem_" + list_item.id
 // Create a new list item when clicking on the "Add" button
-function newElement(list_id, saved_to_database = false) {
+function newElement(list_id, saved_to_database = true) {
     var li = document.createElement("li");
-    var inputBox = document.getElementById(list_id).parentElement.getElementById("myInput")
+    {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
+    var inputBox = document.getElementById("InputText_" + list_id.toString());
     var inputValue = inputBox.value;
     var unorderedList = inputBox.parentElement.nextElementSibling
-    {#var t = document.createTextNode(inputValue);#}
-    {#li.appendChild(t);#}
+
+    {#var list_html_tag_id =  #}
+
     li.className = "listItem";
     if (inputValue === '') {
         alert("You must write something!");
@@ -480,38 +487,58 @@ function newElement(list_id, saved_to_database = false) {
     }
     inputBox.value = "";
 
-    // add checkbox element
-    var itemCheckBox = document.createElement("input")
-    itemCheckBox.type = "checkbox"
-    // id and name should be unique, currently I set it to be list_name + item_name
-    var itemName = "ListName" + inputValue
-    itemCheckBox.id = itemName
-    itemCheckBox.name = itemName
-    itemCheckBox.value = itemName
-    itemCheckBox.addEventListener('change', markListItemByName)
+    // Saved to database if saved_to_database is true
+    if(saved_to_database && inputValue !== '') {
+        var httpRequest = new XMLHttpRequest()
+        var today = new Date()
+        var create_on_timestamp = today.getTime() / 1000
 
-    var itemLabel = document.createElement("label")
-    itemLabel.htmlFor  = itemName
-    itemLabel.innerHTML = itemName
-    li.append(itemCheckBox)
-    li.append(itemLabel)
+        httpRequest.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // get the newly created item's id and set it as the id of the html tag
+                // add checkbox element
+                var jsonResponse = JSON.parse(this.responseText)
+                var itemCheckBox = document.createElement("input")
+                itemCheckBox.type = "checkbox"
+                // id and name should be unique, currently I set it to be list_name + item_name
+                var itemValue = "ListItem_" + jsonResponse['item_id']
+                itemCheckBox.id = itemValue
+                itemCheckBox.name = itemValue
+                itemCheckBox.value = itemValue
+                itemCheckBox.addEventListener('change', markListItemByName)
 
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    li.appendChild(span);
+                var itemLabel = document.createElement("label")
+                itemLabel.htmlFor  = itemValue
+                itemLabel.innerHTML = inputValue
+                li.append(itemCheckBox)
+                li.append(itemLabel)
+
+                var span = document.createElement("SPAN");
+                var txt = document.createTextNode("\u00D7");
+                span.className = "close";
+                span.appendChild(txt);
+                li.appendChild(span);
+            }
+        };
+
+        httpRequest.open('POST', 'addNewListItem');
+        httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+        var params = {
+            "list_id": list_id,
+            "list_item_name": inputValue,
+            "create_on": create_on_timestamp
+        }
+        httpRequest.send(JSON.stringify(params))
+    }
+    else {
+        return
+    }
 
     for (i = 0; i < close.length; i++) {
         close[i].onclick = function() {
           var div = this.parentElement;
           div.style.display = "none";
         }
-    }
-
-    // Saved to database if saved_to_database is true
-    if(saved_to_database) {
-
     }
 }
 

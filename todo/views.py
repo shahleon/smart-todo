@@ -45,14 +45,33 @@ def updateListItem(request):
     else:
         return HttpResponse("Request method is not a Post")
 
-
+@csrf_exempt
 def addNewListItem(request):
     if request.method == 'POST':
-        return HttpResponse("Success!")  # Sending an success response
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        list_id = body['list_id']
+        item_name = body['list_item_name']
+        create_on = body['create_on']
+        create_on_time = datetime.datetime.fromtimestamp(create_on)
+        print(item_name)
+        print(create_on)
+        result_item_id = -1
+        # create a new to-do list object and save it to the database
+        try:
+            with transaction.atomic():
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, list_id=list_id, item_text="", is_done=False)
+                todo_list_item.save()
+                result_item_id = todo_list_item.id
+        except IntegrityError:
+            print("unknown error occurs when trying to create and save a new todo list")
+            return JsonResponse({'item_id': -1})
+        return JsonResponse({'item_id': result_item_id})  # Sending an success response
     else:
-        return HttpResponse("Request method is not a Post")
+        return JsonResponse({'item_id': -1})
 
 
+@csrf_exempt
 def markListItem(request):
     if request.method == 'POST':
         return HttpResponse("Success!")  # Sending an success response
@@ -67,7 +86,7 @@ def getListItemByName(request):
         list_id = body['list_id']
         list_item_name = body['list_item_name']
         # remove the first " and last "
-        list_item_name = list_item_name[1:len(list_item_name) - 1]
+        list_item_name = list_item_name
 
         print("list_id: " + list_id)
         print("list_item_name: " + list_item_name)
@@ -100,12 +119,12 @@ def createNewTodoList(request):
                 todo_list.save()
         except IntegrityError:
             print("unknown error occurs when trying to create and save a new todo list")
-            # return HttpResponse("Request failed when operating on database")
-        # return HttpResponse("Success!")  # Sending an success response
-    # else:
-        # return HttpResponse("Request method is not a Post")
-    latest_lists = List.objects.order_by('-updated_on')[:5]
-    context = {
-        'latest_lists': latest_lists,
-    }
-    return render(request, 'todo/index.html', context)
+            return HttpResponse("Request failed when operating on database")
+        return HttpResponse("Success!")  # Sending an success response
+    else:
+        return HttpResponse("Request method is not a Post")
+    # latest_lists = List.objects.order_by('-updated_on')[:5]
+    # context = {
+    #     'latest_lists': latest_lists,
+    # }
+    # return render(request, 'todo/index.html', context)

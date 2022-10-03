@@ -11,5 +11,5 @@ urlpatterns = [
     path('createNewTodoList', views.createNewTodoList, name='createNewTodoList'),
     path('getListItemByName', views.getListItemByName, name='getListItemByName'),
     path('markListItem', views.markListItem, name='markListItem'),
-
+    path('addNewListItem', views.addNewListItem, name='addNewListItem'),
 ]
