@@ -257,6 +257,10 @@
             {% for list in latest_lists %}
                 <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
             {% endfor %}
+            <hr>
+            {% for template in templates %}
+                <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
+            {% endfor %}
         </ul>
 
         <div class="main">

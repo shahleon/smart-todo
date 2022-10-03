@@ -211,24 +211,21 @@
         }
     </style>
     <meta charset="UTF-8">
-    <title>Available Templates</title>
+    <title>Template Detail</title>
 </head>
 <body>
     <div class="topbar">
-        <h2>Available Templates</h2>
+        <h2>Template detail</h2>
     </div>
 
     <div class="main">
-        {% for template in templates %}
-            <h3 style="text-align: center">{{ template.title_text }}</h3>
-            <ul id="myUL">
-                {% for template_item in template.templateitem_set.all %}
-                    <li>{{ template_item.item_text }}</li>
-                {% endfor %}
-                <button class="amazon-button" onclick="">Use This Template</button>
-            </ul>
-        <br/>
-        {% endfor %}
+        <h3 style="text-align: center">{{ template.title_text }}</h3>
+        <ul id="myUL">
+            {% for template_item in template.templateitem_set.all %}
+                <li>{{ template_item.item_text }}</li>
+            {% endfor %}
+            <button class="amazon-button" onclick="">Use This Template</button>
+        </ul>
     </div>
 
 </body>
