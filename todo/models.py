@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class User(models.Model):
     user_name = models.CharField(max_length=100)
     password = models.CharField(max_length=50)
@@ -23,9 +22,6 @@ class List(models.Model):
 
 
 class ListItem(models.Model):
-    # the name of a list item
-    item_name = models.CharField(max_length=50, null=True, blank=True)
-    # the text note of a list item
     item_text = models.CharField(max_length=100)
     is_done = models.BooleanField(default=False)
     created_on = models.DateTimeField()
@@ -37,7 +33,7 @@ class ListItem(models.Model):
         return "%s: %s" % (self.item_text, self.is_done)
 
 
-class UserTodoTemplate(models.Model):
+class Template(models.Model):
     title_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
     updated_on = models.DateTimeField()
@@ -51,7 +47,7 @@ class UserTodoTemplate(models.Model):
 class TemplateItem(models.Model):
     item_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
-    template = models.ForeignKey(UserTodoTemplate, on_delete=models.CASCADE)
+    template = models.ForeignKey(Template, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
