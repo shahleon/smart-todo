@@ -18,7 +18,7 @@
         }
 
         .topbar h2 {
-            float: left;
+            float: center;
             color: #f2f2f2;
             text-align: center;
             padding-left: 15px;
@@ -56,54 +56,12 @@
             color: #0fa662;
         }
 
-        .rightsidebar hr {
-            height: 2px;
-            background-color: #0fa662;
-            border: none;
-            width: 87%;
-        }
-
-        .rightsidebar {
-            height: 100%;
-            width: 400px;
-            margin-top: 80px;
-            position: fixed;
-            top: 0;
-            right: 0;
-            background-color: #eee;
-            overflow-x: hidden;
-            padding-top: 10px;
-            padding-right: 10px;
-            {#margin: 0;#}
-        }
-
-        .rightsidebar a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 20px;
-            color: #000000;
-            display: block;
-        }
-
-        .rightsidebar form {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 20px;
-            color: #000000;
-            display: block;
-        }
-
-        .rightsidebar a:hover {
-            color: #0fa662;
-        }
-
         ul li:hover {
           background: #ddd;
         }
 
         .main {
-            margin-left: 200px; /* Same as the width of the sidenav */
-            margin-right: 400px; /* Same as the width of the sidenav */
+            margin-left: 0px; /* Same as the width of the sidenav */
             font-size: 20px;
             padding: 0px 20px;
         }
@@ -197,8 +155,8 @@
           clear: both;
         }
 
-        /* Style the input text*/
-        .main input[type=text] {
+        /* Style the input */
+        .main input {
           border:none;
           border-radius: 10px;
           width: 75%;
@@ -208,17 +166,6 @@
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
           display: block;
-        }
-
-        /* Style the input checkbox within unordered list item */
-        .main ul li input[type=checkbox] {
-          position: absolute;
-          left: 2px;
-          top: 12px;
-          width: 20px;
-          height: 20px;
-          padding: 12px 16px 12px 16px;
-          border-radius: 10px;
         }
 
         /* Style the "Add" button */
@@ -239,77 +186,51 @@
         .main .addBtn:hover {
           background-color: #bbb;
         }
+
+        .amazon-button {
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+            background: #0fa662;
+            border: 1px solid #FCD200;
+            font-size: 13px;
+            height: 31px;
+            padding: 0 11px;
+            text-align: center;
+            width: 100%;
+            min-width: 200px;
+            font-weight: 500;
+            color: #0F1111;
+            :hover{
+                background: #bbb;
+                border-color: #F2C200;
+                box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+            }
+        }
     </style>
     <meta charset="UTF-8">
-    <title>To-Done</title>
+    <title>Available Templates</title>
 </head>
 <body>
     <div class="topbar">
-        <h2>To-Done</h2>
-		<ul style="list-style-type: none; margin: 0; padding: 0; overflow: hidden">
-		{% if user.is_authenticated %}
-		  <li style="float: right;"><a href="/logout" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Logout</a></li>
-		  <li style="float: right;"><a href="#" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Welcome, {{user.username}}</a></li>
-		{% else %}
-		  <li style="float: right;"><a href="/login" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Login</a></li>
-		{% endif %}
-		</ul>
+        <h2>Available Templates</h2>
     </div>
 
-    {% if latest_lists %}
-        <ul class="sidenav">
-            <li><a>Today</a></li>
-            <li><a>This Week</a></li>
-            <li><a>This Month</a></li>
-            <hr>
-            {% for list in latest_lists %}
-                <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
-            {% endfor %}
-        </ul>
+    <div class="main">
+        {% for template in templates %}
+            <h3 style="text-align: center">{{ template.title_text }}</h3>
+            <ul id="myUL">
+                {% for template_item in template.templateitem_set.all %}
+                    <li>{{ template_item.item_text }}</li>
+                {% endfor %}
+                <button class="amazon-button" onclick="">Use This Template</button>
+            </ul>
+        <br/>
+        {% endfor %}
+    </div>
 
-        <div class="main">
-            {% for list in latest_lists %}
-                <div id="myDIV" class="header">
-                    <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
-                    <br>
-                    <br>
-                    <br>
-                    <input type="text" id="myInput" placeholder="New Task">
-                    <span onclick="newElement()" class="addBtn">Add</span>
-                </div>
-
-                <ul id="myUL">
-                    <li class="listItem">
-                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                        <label for="vehicle1">Hit the gym</label>
-                        <span class="close">x</span>
-                    </li>
-                    <li class="checked listItem">Pay bills<span class="close">x</span></li>
-                    <li class="listItem">Meet George<span class="close">x</span></li>
-                    <li class="listItem">Buy eggs<span class="close">x</span></li>
-                    <li class="listItem">Read a book<span class="close">x</span></li>
-                    <li class="listItem">Organize office<span class="close">x</span></li>
-                </ul>
-            {% endfor %}
-        </div>
-
-        <ul class="rightsidebar">
-            <li><a>Item name</a></li>
-            <li><a>Create on</a></li>
-            <li><a>Update on</a></li>
-            <form action="/" method="post">
-                  <p><label for="note">Note:</label></p>
-                  <textarea id="note" name="note" rows="4" cols="50">
-
-                  </textarea>
-                  <br>
-                  <input type="submit" value="Save/Update">
-            </form>
-        </ul>
-
-        {% else %}
-        <p>+ Create List</p>
-    {% endif %}
 </body>
 <script>
 // Click on a close button to hide the current list item
@@ -323,42 +244,12 @@ for (i = 0; i < close.length; i++) {
 }
 
 // Add a "checked" symbol when clicking on a list item
-{#var list = document.getElementById("myUL");#}
-{#list.addEventListener('click', function(ev) {#}
-{#  if (ev.target.tagName === 'LI') {#}
-{#    ev.target.classList.toggle('checked');#}
-{#  }#}
-{#, false);#}
-
-// Add a "checked" symbol when clicking on a list item
-var list = document.getElementById("myUL");
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-    // show list item name and its note in the right-side bar
-
-  }
-}, false);
-
-
-var listItemsCheckBoxes = document.querySelectorAll("input[type=checkbox]");
-{#let enabledSettings = []#}
-/*
-For IE11 support, replace arrow functions with normal functions and
-use a polyfill for Array.forEach:
-https://vanillajstoolkit.com/polyfills/arrayforeach/
-*/
-
-// Use Array.forEach to add an event listener to each checkbox.
-listItemsCheckBoxes.forEach(function(checkbox) {
-  checkbox.addEventListener('change', function() {
-      console.log(this.parent.tagName)
-      this.parent.classList.toggle('checked')
-    if(this.checked) {
-
-    }
-  })
-});
+<!--var list = document.getElementById("myUL");-->
+<!--list.addEventListener('click', function(ev) {-->
+<!--  if (ev.target.tagName === 'LI') {-->
+<!--    ev.target.classList.toggle('checked');-->
+<!--  }-->
+<!--}, false);-->
 
 // Create a new list item when clicking on the "Add" button
 function newElement() {
