@@ -139,3 +139,8 @@ GitHub.sublime-settings
 
 # Misc auto generated files
 .DS_Store
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
