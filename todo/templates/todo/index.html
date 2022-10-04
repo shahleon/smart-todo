@@ -56,6 +56,38 @@
             color: #0fa662;
         }
 
+        .sidenav input[type=text] {
+          border:none;
+          border-radius: 10px;
+          width: 75%;
+          margin-left: 10px;
+          padding: 10px;
+          float: left;
+          font-size: 16px;
+          box-shadow: 1px 1px 5px #555 inset;
+          white-space: nowrap;
+          display: block;
+        }
+
+        .sidenav .addTodoList {
+          padding: 9px;
+          width: 25%;
+          background: #d9d9d9;
+          color: #555;
+          margin-left: 50px;
+          float: left;
+          text-align: center;
+          font-size: 16px;
+          cursor: pointer;
+          transition: 0.3s;
+          border-radius: 10px;
+          display: inline-block
+        }
+
+        .sidenav .addTodoList:hover {
+          background-color: #bbb;
+        }
+
         .rightsidebar hr {
             height: 2px;
             background-color: #0fa662;
@@ -152,23 +184,29 @@
         /* When clicked on, add a background color and strike out text */
         .main ul li.checked {
           background: #ccc;
+          color: #aaa;
+          {#text-decoration: line-through;#}
+        }
+
+        .main ul li.done {
+          background: #3d3939;
           color: #fff;
           text-decoration: line-through;
         }
 
         /* Add a "checked" mark when clicked on */
-        .main ul li.checked::before {
-          content: '';
-          position: absolute;
-          border-color: #fff;
-          border-style: solid;
-          border-width: 0 2px 2px 0;
-          top: 10px;
-          left: 16px;
-          transform: rotate(45deg);
-          height: 15px;
-          width: 7px;
-        }
+        {#.main ul li.checked::before {#}
+        {#  content: '';#}
+        {#  position: absolute;#}
+        {#  border-color: #fff;#}
+        {#  border-style: solid;#}
+        {#  border-width: 0 2px 2px 0;#}
+        {#  top: 10px;#}
+        {#  left: 16px;#}
+        {#  transform: rotate(45deg);#}
+        {#  height: 15px;#}
+        {#  width: 7px;#}
+        {#}#}
 
         /* Style the close button */
         .main .close {
@@ -244,73 +282,106 @@
     <title>To-Done</title>
 </head>
 <body>
+    {% load todo_extras %}
     <div class="topbar">
         <h2>To-Done</h2>
     </div>
 
-    <ul class="sidenav">
-        <li><a>Today</a></li>
-        <li><a>This Week</a></li>
-        <li><a>This Month</a></li>
-        <hr>
-        {% for list in latest_lists %}
-            <li><a href="todo/{{ list.id }}">{{ list.title_text }}</a></li>
-        {% endfor %}
-        <hr>
-        {% for template in templates %}
-            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if latest_lists %}
+        <ul class="sidenav">
+            <li><a>Today</a></li>
+            <li><a>This Week</a></li>
+            <li><a>This Month</a></li>
+            <hr>
+            {% for list in latest_lists %}
+                <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
+            {% endfor %}
+            <br>
+            <input type="text" id="todoListInput" placeholder="New Todo List">
+            <span onclick="newTodoList()" class="addTodoList">Add</span>
+        </ul>
 
-    <div class="main">
-        {% for list in latest_lists %}
-            <div id="myDIV" class="header">
-                <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
+        <div class="main">
+            {% for list in latest_lists %}
+                <div id="myDIV" class="header">
+                    <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
+                    <br>
+                    <br>
+                    <br>
+                    <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                </div>
+                <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
+                    {% for list_item in latest_list_items %}
+                        {% if list_item.list_id == list.id %}
+                            {% if not list_item.is_done %}
+                                <li class="listItem">
+                            {% else %}
+                                <li class="listItem done">
+                            {% endif %}
+                            {% if not list_item.is_done %}
+                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
+                            {% else %}
+                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
+                            {% endif %}
+                                    <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                    <span class="close">x</span>
+                                </li>
+                        {% endif %}
+                    {% endfor %}
+{#                    <li class="listItem">#}
+{#                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">#}
+{#                        <label for="vehicle1">Hit the gym</label>#}
+{#                        <span class="close">x</span>#}
+{#                    </li>#}
+{#                    <li class="checked listItem">Pay bills<span class="close">x</span></li>#}
+{#                    <li class="listItem">Meet George<span class="close">x</span></li>#}
+{#                    <li class="listItem">Buy eggs<span class="close">x</span></li>#}
+{#                    <li class="listItem">Read a book<span class="close">x</span></li>#}
+{#                    <li class="listItem">Organize office<span class="close">x</span></li>#}
+                </ul>
+            {% endfor %}
+        </div>
+
+        <ul class="rightsidebar" id = "rightsidebar">
+            <li><a>List name</a></li>
+            <li><a>Item name</a></li>
+            <li hidden><a></a></li>
+            <form action="/updateListItem/0" method="post">
+                <p><label for="note">Note:</label></p>
+                <textarea id="note" name="note" rows="4" cols="50">
+                </textarea>
                 <br>
-                <br>
-                <br>
-                <input type="text" id="myInput" placeholder="New Task">
-                <span onclick="newElement()" class="addBtn">Add</span>
-            </div>
+                <input type="submit" value="Save/Update">
+            </form>
+        </ul>
 
-            <ul id="myUL">
-                <li class="listItem">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                    <label for="vehicle1">Hit the gym</label>
-                    <span class="close">x</span>
-                </li>
-                <li class="checked listItem">Pay bills<span class="close">x</span></li>
-                <li class="listItem">Meet George<span class="close">x</span></li>
-                <li class="listItem">Buy eggs<span class="close">x</span></li>
-                <li class="listItem">Read a book<span class="close">x</span></li>
-                <li class="listItem">Organize office<span class="close">x</span></li>
-            </ul>
-        {% endfor %}
-    </div>
-
-    <ul class="rightsidebar">
-        <li><a>Item name</a></li>
-        <li><a>Create on</a></li>
-        <li><a>Update on</a></li>
-        <form action="/" method="post">
-              <p><label for="note">Note:</label></p>
-              <textarea id="note" name="note" rows="4" cols="50">
-
-              </textarea>
-              <br>
-              <input type="submit" value="Save/Update">
-        </form>
-    </ul>
+        {% else %}
+        <p>+ Create List</p>
+    {% endif %}
 </body>
 <script>
 // Click on a close button to hide the current list item
 var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
+  close[i].onclick = removeListItem
+}
+
+function removeListItem() {
+    // hide layout first
+    var div = this.parentElement
+    div.style.display = "none"
+
+    // send post request to delete the actual list item
+    var list_item_id = this.parentElement.getElementsByTagName("input")[0].id.toString().substring(9)
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.open('POST', 'removeListItem');
+    httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+    var params = {
+        "list_item_id": list_item_id
+    }
+    httpRequest.send(JSON.stringify(params))
 }
 
 // Add a "checked" symbol when clicking on a list item
@@ -321,16 +392,72 @@ for (i = 0; i < close.length; i++) {
 {#  }#}
 {#, false);#}
 
-// Add a "checked" symbol when clicking on a list item
-var list = document.getElementById("myUL");
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-    // show list item name and its note in the right-side bar
+// When click a list item, restore all othe
+var list = document.getElementsByClassName("listItemsUnorderedList");
+for(let i = 0; i < list.length; i++) {
+    list[i].addEventListener('click', function (ev) {
+        if (ev.target.tagName === 'LI') {
+            {#ev.target.classList.toggle('checked');#}
+            // restore all other checked list items
+            for(let k = 0; k < list.length; k++) {
+                for (let j = 0; j < list[k].children.length; j++) {
+                    if (list[k].children[j].classList.contains('checked') && list[k].children[j] !== ev.target) {
+                        list[k].children[j].classList.remove('checked')
+                    }
+                }
+            }
+            // show list item name and its note in the right-side bar
 
-  }
-}, false);
+            // TODO access database and get list and list item info
+            var item_name = ev.target.children[1].innerHTML
+            // ListItem_{id}, capture id start from index 9
+            var item_id = ev.target.getElementsByTagName("input")[0].id.toString().substring(9)
 
+            // this list id will look like List_{id}, so remove the first five letters
+            var list_id = ev.target.parentElement.id.substring(5)
+            var httpRequest = new XMLHttpRequest()
+            {#httpRequest.onreadystatechange = alertContents;#}
+            httpRequest.onreadystatechange = function() {
+              if (this.readyState === 4 && this.status === 200) {
+                  console.log(this.responseText)
+                  var jsonResponse = JSON.parse(this.responseText)
+                  var rightsidebar = document.getElementById("rightsidebar")
+
+                  var list_title_li_node = rightsidebar.children[0]
+                  var list_text_node = list_title_li_node.children[0]
+                  list_text_node.innerHTML = "List name: " + jsonResponse['list_name']
+
+                  var item_title_li_node = rightsidebar.children[1]
+                  var item_text_node = item_title_li_node.children[0]
+                  item_text_node.innerHTML = "Item name: " + jsonResponse['item_name']
+
+                  var item_form_node = rightsidebar.children[3]
+                  var item_textarea_node = item_form_node.children[1]
+                  item_textarea_node.value = jsonResponse['item_text']
+
+                  // set the action url, append item id parameter to the end of url
+                  var text_form = rightsidebar.getElementsByTagName("form")[0]
+                  text_form.action = "/updateListItem/" + jsonResponse['item_id']
+                {#document.getElementById('demoGet').innerHTML = this.responseText;#}
+              }
+            };
+            httpRequest.open('POST', 'getListItemById');
+            httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+            {#var token = {% csrf_token %}#}
+            var params = {
+                "list_item_name": item_name,
+                "list_id": list_id,
+                "list_item_id": item_id,
+            }
+            httpRequest.send(JSON.stringify(params))
+
+
+            // Change the content of right-side bar
+            ev.target.classList.toggle('checked');
+            {#global_count++#}
+        }
+    }, false);
+}
 
 var listItemsCheckBoxes = document.querySelectorAll("input[type=checkbox]");
 {#let enabledSettings = []#}
@@ -340,43 +467,151 @@ use a polyfill for Array.forEach:
 https://vanillajstoolkit.com/polyfills/arrayforeach/
 */
 
+// mark item as done or undo it
+function markListItemByName() {
+    if (this.parentElement.tagName === 'LI') {
+        this.parentElement.classList.toggle('done');
+        // TODO need to remove the list item from database
+        var item_name = this.nextElementSibling.innerHTML
+        // List_{id}
+        var list_id = this.parentElement.parentElement.id.toString().substring(5)
+        // ListItem_{id}
+        var list_item_id = this.id.toString().substring(9)
+        var httpRequest = new XMLHttpRequest()
+        var is_done = this.parentElement.classList.contains('done')
+        httpRequest.open('POST', 'markListItem');
+        httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+        var params = {
+            "list_id": list_id,
+            "list_item_name": item_name,
+            "is_done": is_done,
+            "list_item_id": list_item_id
+        }
+        httpRequest.send(JSON.stringify(params))
+    }
+}
+
+
 // Use Array.forEach to add an event listener to each checkbox.
 listItemsCheckBoxes.forEach(function(checkbox) {
-  checkbox.addEventListener('change', function() {
-      console.log(this.parent.tagName)
-      this.parent.classList.toggle('checked')
-    if(this.checked) {
-
-    }
-  })
+  checkbox.addEventListener('change', markListItemByName)
 });
 
+
+// The naming convention of List is "List_" + list.id
+// The naming convention of ListItem is "ListItem_" + list_item.id
 // Create a new list item when clicking on the "Add" button
-function newElement() {
-  var li = document.createElement("li");
-  var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
-  li.appendChild(t);
-  li.className = "listItem";
-  if (inputValue === '') {
-    alert("You must write something!");
-  } else {
-    document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
+function newElement(list_id, saved_to_database = true) {
+    var li = document.createElement("li");
+    {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
+    var inputBox = document.getElementById("InputText_" + list_id.toString());
+    var inputValue = inputBox.value;
+    var unorderedList = inputBox.parentElement.nextElementSibling
 
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
+    {#var list_html_tag_id =  #}
 
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
+    li.className = "listItem";
+    if (inputValue === '') {
+        alert("You must write something!");
     }
-  }
+    else {
+        unorderedList.appendChild(li);
+    }
+    inputBox.value = "";
+
+    // Saved to database if saved_to_database is true
+    if(saved_to_database && inputValue !== '') {
+        var httpRequest = new XMLHttpRequest()
+        var today = new Date()
+        var create_on_timestamp = today.getTime() / 1000
+
+        httpRequest.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // get the newly created item's id and set it as the id of the html tag
+                // add checkbox element
+                var jsonResponse = JSON.parse(this.responseText)
+                var itemCheckBox = document.createElement("input")
+                itemCheckBox.type = "checkbox"
+                // id and name should be unique, currently I set it to be list_name + item_name
+                var itemValue = "ListItem_" + jsonResponse['item_id']
+                itemCheckBox.id = itemValue
+                itemCheckBox.name = itemValue
+                itemCheckBox.value = itemValue
+                itemCheckBox.addEventListener('change', markListItemByName)
+
+                var itemLabel = document.createElement("label")
+                itemLabel.htmlFor  = itemValue
+                itemLabel.innerHTML = inputValue
+                li.append(itemCheckBox)
+                li.append(itemLabel)
+
+                var span = document.createElement("SPAN");
+                var txt = document.createTextNode("\u00D7");
+                span.className = "close";
+                span.appendChild(txt);
+                li.appendChild(span);
+            }
+        };
+
+        httpRequest.open('POST', 'addNewListItem');
+        httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+        var params = {
+            "list_id": list_id,
+            "list_item_name": inputValue,
+            "create_on": create_on_timestamp
+        }
+        httpRequest.send(JSON.stringify(params))
+    }
+    else {
+        return
+    }
+
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = removeListItem
+    }
 }
+
+function newTodoList() {
+    {#console.log("add a new to-do list")#}
+    var li = document.createElement("li")
+    var li_a = document.createElement("a")
+    var leftSideBar = document.getElementById("todoListInput")
+    var inputValue = leftSideBar.value
+    if (inputValue === '') {
+        alert("You must write something!")
+    }
+    else {
+        // add new to-do list to the
+        li_a.innerHTML = inputValue
+        li.appendChild(li_a)
+
+        leftSideBar.insertBefore(li, leftSideBar.children[leftSideBar.children.length - 1]);
+        var today = new Date()
+        var create_on_timestamp = today.getTime() / 1000
+        // TODO Save new todo list to database
+        var httpRequest = new XMLHttpRequest()
+        {#httpRequest.onreadystatechange = alertContents;#}
+        httpRequest.open('POST', 'createNewTodoList');
+        httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+        {#var token = {% csrf_token %}#}
+        var params = {
+            "list_name": inputValue,
+            "create_on": create_on_timestamp,
+        }
+
+        httpRequest.send(JSON.stringify(params))
+    }
+}
+
+/* show one specific to-do list */
+function showTodoList() {
+    // (1) first we need to remove all li tags inside unoreded list "myUL"
+
+    // (2) Then we query the backend to retrieve the todo list data
+
+    // (3) Add new elements to myUL unordered list
+}
+
+
 </script>
 </html>
