@@ -17,12 +17,25 @@
             background-color: #0fa662;
         }
 
-        .topbar h2 {
+        .topbar a {
             float: left;
             color: #f2f2f2;
             text-align: center;
             padding-left: 15px;
             text-decoration: none;
+            font-size: 20px;
+        }
+
+        /* Change the color of links on hover */
+        .topbar a:hover {
+          background-color: #ddd;
+          color: black;
+        }
+
+        /* Add a color to the active/current link */
+        .topbar a.active {
+          background-color: #04AA6D;
+          color: white;
         }
 
         .sidenav hr {
@@ -277,6 +290,29 @@
         .main .addBtn:hover {
           background-color: #bbb;
         }
+
+        .amazon-button {
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+            background: #0fa662;
+            border: 1px solid #FCD200;
+            font-size: 13px;
+            height: 31px;
+            padding: 0 11px;
+            margin-top: 5px;
+            text-align: center;
+            width: 100%;
+            min-width: 200px;
+            font-weight: 500;
+            color: #f9f9f9;
+            :hover{
+                background: #bbb;
+                border-color: #F2C200;
+                box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+        }
     </style>
     <meta charset="UTF-8">
     <title>To-Done</title>
@@ -284,65 +320,60 @@
 <body>
     {% load todo_extras %}
     <div class="topbar">
-        <h2>To-Done</h2>
+        <a class="active" href="/">To-Done</a>
+        <a href="/todo">Todo</a>
+        <a href="/templates">Templates</a>
+    </div>
+    <ul class="sidenav">
+        {% for list in latest_lists %}
+            <li><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></li>
+        {% endfor %}
+        <br>
+        <input type="text" id="todoListInput" placeholder="New Todo List">
+        <span onclick="newTodoList()" class="addTodoList">Add</span>
+        {% for template in templates %}
+            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div class="main">
+        {% for list in latest_lists %}
+            <div id="myDIV" class="header">
+                <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
+                <br>
+                <br>
+                <br>
+                <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            </div>
+            <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
+                {% for list_item in latest_list_items %}
+                    {% if list_item.list_id == list.id %}
+                        {% if not list_item.is_done %}
+                            <li class="listItem">
+                        {% else %}
+                            <li class="listItem done">
+                        {% endif %}
+                        {% if not list_item.is_done %}
+                                <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
+                        {% else %}
+                                <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
+                        {% endif %}
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                <span class="close">x</span>
+                            </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        <form action="/templates/new-from-todo" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="todo" id="todo-{{ list.id }}" value="{{ list.id }}">
+            <button class="amazon-button" onclick="">Save As Template</button>
+        </form>
+        {% endfor %}
     </div>
 
     {% if latest_lists %}
-        <ul class="sidenav">
-            <li><a>Today</a></li>
-            <li><a>This Week</a></li>
-            <li><a>This Month</a></li>
-            <hr>
-            {% for list in latest_lists %}
-                <li><a href="/{{ list.id }}/">{{ list.title_text }}</a></li>
-            {% endfor %}
-            <br>
-            <input type="text" id="todoListInput" placeholder="New Todo List">
-            <span onclick="newTodoList()" class="addTodoList">Add</span>
-        </ul>
-
-        <div class="main">
-            {% for list in latest_lists %}
-                <div id="myDIV" class="header">
-                    <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
-                    <br>
-                    <br>
-                    <br>
-                    <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
-                </div>
-                <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
-                    {% for list_item in latest_list_items %}
-                        {% if list_item.list_id == list.id %}
-                            {% if not list_item.is_done %}
-                                <li class="listItem">
-                            {% else %}
-                                <li class="listItem done">
-                            {% endif %}
-                            {% if not list_item.is_done %}
-                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
-                            {% else %}
-                                    <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
-                            {% endif %}
-                                    <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
-                                    <span class="close">x</span>
-                                </li>
-                        {% endif %}
-                    {% endfor %}
-{#                    <li class="listItem">#}
-{#                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">#}
-{#                        <label for="vehicle1">Hit the gym</label>#}
-{#                        <span class="close">x</span>#}
-{#                    </li>#}
-{#                    <li class="checked listItem">Pay bills<span class="close">x</span></li>#}
-{#                    <li class="listItem">Meet George<span class="close">x</span></li>#}
-{#                    <li class="listItem">Buy eggs<span class="close">x</span></li>#}
-{#                    <li class="listItem">Read a book<span class="close">x</span></li>#}
-{#                    <li class="listItem">Organize office<span class="close">x</span></li>#}
-                </ul>
-            {% endfor %}
-        </div>
-
         <ul class="rightsidebar" id = "rightsidebar">
             <li><a>List name</a></li>
             <li><a>Item name</a></li>
@@ -355,9 +386,6 @@
                 <input type="submit" value="Save/Update">
             </form>
         </ul>
-
-        {% else %}
-        <p>+ Create List</p>
     {% endif %}
 </body>
 <script>

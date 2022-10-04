@@ -1,39 +1,86 @@
 import datetime
 import json
 
-from django.shortcuts import render, redirect
-from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction, IntegrityError
+from django.utils import timezone
 
-from todo.forms import UpdateItemTextForm
-from todo.models import List, ListItem
+from todo.models import List, ListItem, Template, TemplateItem
 
 
 def index(request):
     latest_lists = List.objects.order_by('-updated_on')[:5]
     latest_list_items = ListItem.objects.order_by('list_id')
+    saved_templates = Template.objects.order_by('created_on')
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
+        'templates': saved_templates
     }
     return render(request, 'todo/index.html', context)
 
 
 def listitems(request, list_id):
-    try:
-        todo_list = List.objects.get(pk=list_id)
-    except List.DoesNotExist:
-        raise Http404("List does not exist")
-    return render(request, 'todo/list_items.html', {'list': todo_list})
+    todo_list = get_object_or_404(List, pk=list_id)
+    latest_lists = List.objects.order_by('-updated_on')[:5]
+    latest_list_items = ListItem.objects.order_by('list_id')
+    context = {
+        'latest_lists': latest_lists,
+        'list': todo_list,
+        'latest_list_items': latest_list_items,
+    }
+    return render(request, 'todo/list_items.html', context)
 
 
 def login(request):
     return render(request, 'todo/login.html')
 
 
-def list_templates(request):
-    return render(request, 'todo/list_templates.html')
+def todo_from_template(request):
+    template_id = request.POST['template']
+    fetched_template = get_object_or_404(Template, pk=template_id)
+    todo = List.objects.create(
+        title_text=fetched_template.title_text,
+        created_on=timezone.now(),
+        updated_on=timezone.now()
+        # user_id=1 // TODO: assign this to a user
+    )
+    for template_item in fetched_template.templateitem_set.all():
+        ListItem.objects.create(
+            item_name=template_item.item_text,
+            item_text="",
+            created_on=timezone.now(),
+            list=todo,
+            is_done=False,
+        )
+    return redirect("/todo")
+
+
+def template_from_todo(request):
+    todo_id = request.POST['todo']
+    fetched_todo = get_object_or_404(List, pk=todo_id)
+    new_template = Template.objects.create(
+        title_text=fetched_todo.title_text,
+        created_on=timezone.now(),
+        updated_on=timezone.now()
+    )
+    for todo_item in fetched_todo.listitem_set.all():
+        TemplateItem.objects.create(
+            item_text=todo_item.item_name,
+            created_on=timezone.now(),
+            template=new_template
+        )
+    return redirect("/templates")
+
+
+def template(request):
+    saved_templates = Template.objects.order_by('created_on')
+    context = {
+        'templates': saved_templates
+    }
+    return render(request, 'todo/template.html', context)
 
 
 @csrf_exempt

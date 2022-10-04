@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ('todo', '0004_list_user_id'),
+        ('todo', '0005_listitem_item_name'),
     ]
 
     operations = [
