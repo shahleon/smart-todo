@@ -37,17 +37,31 @@ def list_templates(request):
 
 
 @csrf_exempt
-def updateListItem(request):
+def updateListItem(request, item_id):
     if request.method == 'POST':
-        form = UpdateItemTextForm(request.POST)
-        if form.is_valid():
-            print("form valid")
+        updated_text = request.POST['note']
+        # print(request.POST)
+        print(updated_text)
+        print(item_id)
+        if item_id <= 0:
+            return redirect("index")
+        # form = UpdateItemTextForm(request.POST)
+        # if form.is_valid():
+        #     print("form valid")
         # post_request = HttpRequest.POST.get()
         # m = Like(post=likedpost) # Creating Like Object
         # m.save()  # saving it to store in database
+        try:
+            with transaction.atomic():
+                todo_list_item = ListItem.objects.get(id=item_id)
+                todo_list_item.item_text = updated_text
+                todo_list_item.save(force_update=True)
+        except IntegrityError as e:
+            print(str(e))
+            print("unknown error occurs when trying to update todo list item text")
         return redirect("index")
     else:
-        return HttpResponse("Request method is not a Post")
+        return redirect("index")
 
 
 @csrf_exempt
@@ -125,12 +139,41 @@ def getListItemByName(request):
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(list_id=list_id, item_name=list_item_name)
                 # Sending an success response
-                return JsonResponse({'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
     else:
         return JsonResponse({'result': 'get'})  # Sending an success response
+
+
+@csrf_exempt
+def getListItemById(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        list_id = body['list_id']
+        list_item_name = body['list_item_name']
+        list_item_id = body['list_item_id']
+        # remove the first " and last "
+        # list_item_name = list_item_name
+
+        print("list_id: " + list_id)
+        print("list_item_name: " + list_item_name)
+        print("list_item_id: " + list_item_id)
+        try:
+            with transaction.atomic():
+                query_list = List.objects.get(id=list_id)
+                query_item = ListItem.objects.get(id=list_item_id)
+                print("item_text", query_item.item_text)
+                # Sending an success response
+                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+        except IntegrityError:
+            print("query list item" + str(list_item_name) + " failed!")
+            JsonResponse({})
+    else:
+        return JsonResponse({'result': 'get'})  # Sending an success response
+
 
 @csrf_exempt
 def createNewTodoList(request):

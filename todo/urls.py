@@ -10,7 +10,8 @@ urlpatterns = [
     path('updateListItem', views.updateListItem, name='updateListItem'),
     path('createNewTodoList', views.createNewTodoList, name='createNewTodoList'),
     path('getListItemByName', views.getListItemByName, name='getListItemByName'),
+    path('getListItemById', views.getListItemById, name='getListItemById'),
     path('markListItem', views.markListItem, name='markListItem'),
     path('addNewListItem', views.addNewListItem, name='addNewListItem'),
-    path('updateListItem', views.updateListItem, name='updateListItem'),
+    path('updateListItem/<int:item_id>', views.updateListItem, name='updateListItem'),
 ]

@@ -347,11 +347,9 @@
             <li><a>List name</a></li>
             <li><a>Item name</a></li>
             <li hidden><a></a></li>
-            <form action="/updateListItem" method="post">
-                <p id="hidden_item_id" hidden>id</p>
+            <form action="/updateListItem/0" method="post">
                 <p><label for="note">Note:</label></p>
                 <textarea id="note" name="note" rows="4" cols="50">
-
                 </textarea>
                 <br>
                 <input type="submit" value="Save/Update">
@@ -399,6 +397,9 @@ for(let i = 0; i < list.length; i++) {
 
             // TODO access database and get list and list item info
             var item_name = ev.target.children[1].innerHTML
+            // ListItem_{id}, capture id start from index 9
+            var item_id = ev.target.getElementsByTagName("input")[0].id.toString().substring(9)
+
             // this list id will look like List_{id}, so remove the first five letters
             var list_id = ev.target.parentElement.id.substring(5)
             var httpRequest = new XMLHttpRequest()
@@ -420,15 +421,20 @@ for(let i = 0; i < list.length; i++) {
                   var item_form_node = rightsidebar.children[3]
                   var item_textarea_node = item_form_node.children[1]
                   item_textarea_node.value = jsonResponse['item_text']
+
+                  // set the action url, append item id parameter to the end of url
+                  var text_form = rightsidebar.getElementsByTagName("form")[0]
+                  text_form.action = "/updateListItem/" + jsonResponse['item_id']
                 {#document.getElementById('demoGet').innerHTML = this.responseText;#}
               }
             };
-            httpRequest.open('POST', 'getListItemByName');
+            httpRequest.open('POST', 'getListItemById');
             httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
             {#var token = {% csrf_token %}#}
             var params = {
                 "list_item_name": item_name,
                 "list_id": list_id,
+                "list_item_id": item_id,
             }
             httpRequest.send(JSON.stringify(params))
 
