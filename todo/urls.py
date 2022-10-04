@@ -8,6 +8,7 @@ urlpatterns = [
     path('login',views.login, name='login'),
     path('list_templates', views.list_templates, name='list_templates'),
     path('updateListItem', views.updateListItem, name='updateListItem'),
+    path('removeListItem', views.removeListItem, name='removeListItem'),
     path('createNewTodoList', views.createNewTodoList, name='createNewTodoList'),
     path('getListItemByName', views.getListItemByName, name='getListItemByName'),
     path('getListItemById', views.getListItemById, name='getListItemById'),

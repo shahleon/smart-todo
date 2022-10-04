@@ -365,10 +365,23 @@
 var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
+  close[i].onclick = removeListItem
+}
+
+function removeListItem() {
+    // hide layout first
+    var div = this.parentElement
+    div.style.display = "none"
+
+    // send post request to delete the actual list item
+    var list_item_id = this.parentElement.getElementsByTagName("input")[0].id.toString().substring(9)
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.open('POST', 'removeListItem');
+    httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
+    var params = {
+        "list_item_id": list_item_id
+    }
+    httpRequest.send(JSON.stringify(params))
 }
 
 // Add a "checked" symbol when clicking on a list item
@@ -554,10 +567,7 @@ function newElement(list_id, saved_to_database = true) {
     }
 
     for (i = 0; i < close.length; i++) {
-        close[i].onclick = function() {
-          var div = this.parentElement;
-          div.style.display = "none";
-        }
+        close[i].onclick = removeListItem
     }
 }
 
