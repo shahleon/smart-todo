@@ -317,10 +317,6 @@
         {% endfor %}
         <input type="text" id="todoListInput" placeholder="New Todo List">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
-        <hr>
-        {% for template in templates %}
-            <li><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></li>
-        {% endfor %}
     </ul>
 
     <div class="main">
