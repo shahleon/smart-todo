@@ -354,6 +354,11 @@
             <input type="hidden" name="todo" id="todo-{{ list.id }}" value="{{ list.id }}">
             <button class="add-template-button" onclick="">Save As Template</button>
         </form>
+        <form action="/delete-todo" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="todo" id="delete-todo-{{ list.id }}" value="{{ list.id }}">
+            <button class="amazon-button" onclick="">Delete</button>
+        </form>
         {% endfor %}
     </div>
 

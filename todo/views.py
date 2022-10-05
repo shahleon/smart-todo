@@ -85,6 +85,13 @@ def template_from_todo(request):
     return redirect("/templates")
 
 
+def delete_todo(request):
+    todo_id = request.POST['todo']
+    fetched_todo = get_object_or_404(List, pk=todo_id)
+    fetched_todo.delete()
+    return redirect("/todo")
+
+
 def template(request):
     saved_templates = Template.objects.order_by('created_on')
     context = {
