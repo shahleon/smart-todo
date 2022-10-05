@@ -24,8 +24,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
-def index(request):
-    latest_lists = List.objects.order_by('-updated_on')[:5]
+def index(request, list_id=0):
+    if list_id != 0:
+        latest_lists = List.objects.filter(id=list_id)
+    else:
+        latest_lists = List.objects.order_by('-updated_on')[:5]
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.order_by('created_on')
     context = {
@@ -36,16 +39,16 @@ def index(request):
     return render(request, 'todo/index.html', context)
 
 
-def listitems(request, list_id):
-    todo_list = get_object_or_404(List, pk=list_id)
-    latest_lists = List.objects.order_by('-updated_on')[:5]
-    latest_list_items = ListItem.objects.order_by('list_id')
-    context = {
-        'latest_lists': latest_lists,
-        'list': todo_list,
-        'latest_list_items': latest_list_items,
-    }
-    return render(request, 'todo/list_items.html', context)
+# def listitems(request, list_id):
+#     todo_list = get_object_or_404(List, pk=list_id)
+#     latest_lists = List.objects.order_by('-updated_on')[:5]
+#     latest_list_items = ListItem.objects.order_by('list_id')
+#     context = {
+#         'latest_lists': latest_lists,
+#         'list': todo_list,
+#         'latest_list_items': latest_list_items,
+#     }
+#     return render(request, 'todo/list_items.html', context)
 
 
 def todo_from_template(request):
@@ -92,8 +95,11 @@ def delete_todo(request):
     return redirect("/todo")
 
 
-def template(request):
-    saved_templates = Template.objects.order_by('created_on')
+def template(request, template_id=0):
+    if template_id != 0:
+        saved_templates = Template.objects.filter(id=template_id)
+    else:
+        saved_templates = Template.objects.order_by('created_on')
     context = {
         'templates': saved_templates
     }
@@ -284,13 +290,13 @@ def createNewTodoList(request):
     #     'latest_lists': latest_lists,
     # }
     # return render(request, 'todo/index.html', context)
-    
+
 
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         print(form)
-        if form.is_valid():            
+        if form.is_valid():
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful." )
@@ -319,7 +325,7 @@ def login_request(request):
 
 def logout_request(request):
 	logout(request)
-	messages.info(request, "You have successfully logged out.") 
+	messages.info(request, "You have successfully logged out.")
 	return redirect("todo:index")
 
 def password_reset_request(request):
@@ -348,9 +354,9 @@ def password_reset_request(request):
                         send_email.send()
 						#send_mail(subject, email, 'ckuo3@ncsu.edu' , [user.email], fail_silently=False)
                     except BadHeaderError:
-                    
+
                         return HttpResponse('Invalid header found')
-                        
+
                     return redirect("/password_reset/done/")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="todo/password/password_reset.html", context={"password_reset_form":password_reset_form})

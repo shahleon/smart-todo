@@ -287,7 +287,8 @@
             min-width: 200px;
             font-weight: 500;
             color: #f9f9f9;
-            :hover{
+        }
+       .add-template-button:hover{
                 background: #bbb;
                 border-color: #F2C200;
                 box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
@@ -315,6 +316,7 @@
         {% for list in latest_lists %}
             <li><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></li>
         {% endfor %}
+        <br>
         <input type="text" id="todoListInput" placeholder="New Todo List">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
     </ul>
@@ -389,7 +391,7 @@ function removeListItem() {
     // send post request to delete the actual list item
     var list_item_id = this.parentElement.getElementsByTagName("input")[0].id.toString().substring(9)
     var httpRequest = new XMLHttpRequest()
-    httpRequest.open('POST', 'removeListItem');
+    httpRequest.open('POST', '/removeListItem');
     httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
     var params = {
         "list_item_id": list_item_id
@@ -446,7 +448,7 @@ for(let i = 0; i < list.length; i++) {
                 {#document.getElementById('demoGet').innerHTML = this.responseText;#}
               }
             };
-            httpRequest.open('POST', 'getListItemById');
+            httpRequest.open('POST', '/getListItemById');
             httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
             {#var token = {% csrf_token %}#}
             var params = {
@@ -484,7 +486,7 @@ function markListItemByName() {
         var list_item_id = this.id.toString().substring(9)
         var httpRequest = new XMLHttpRequest()
         var is_done = this.parentElement.classList.contains('done')
-        httpRequest.open('POST', 'markListItem');
+        httpRequest.open('POST', '/markListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
@@ -553,12 +555,13 @@ function newElement(list_id, saved_to_database = true) {
                 var span = document.createElement("SPAN");
                 var txt = document.createTextNode("\u00D7");
                 span.className = "close";
+                span.onclick = removeListItem
                 span.appendChild(txt);
                 li.appendChild(span);
             }
         };
 
-        httpRequest.open('POST', 'addNewListItem');
+        httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
@@ -567,17 +570,16 @@ function newElement(list_id, saved_to_database = true) {
         }
         httpRequest.send(JSON.stringify(params))
     }
-    else {
-        return
-    }
+    {#else {#}
+    {#    return#}
+    {#}#}
 
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = removeListItem
-    }
+    {#for (i = 0; i < close.length; i++) {#}
+    {#    close[i].onclick = removeListItem#}
+    {#}#}
 }
 
 function newTodoList() {
-    {#console.log("add a new to-do list")#}
     var li = document.createElement("li")
     var li_a = document.createElement("a")
     var leftSideBar = document.getElementById("todoListInput")
@@ -596,7 +598,7 @@ function newTodoList() {
         // TODO Save new todo list to database
         var httpRequest = new XMLHttpRequest()
         {#httpRequest.onreadystatechange = alertContents;#}
-        httpRequest.open('POST', 'createNewTodoList');
+        httpRequest.open('POST', '/createNewTodoList');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         {#var token = {% csrf_token %}#}
         var params = {
@@ -607,16 +609,6 @@ function newTodoList() {
         httpRequest.send(JSON.stringify(params))
     }
 }
-
-/* show one specific to-do list */
-function showTodoList() {
-    // (1) first we need to remove all li tags inside unoreded list "myUL"
-
-    // (2) Then we query the backend to retrieve the todo list data
-
-    // (3) Add new elements to myUL unordered list
-}
-
 
 </script>
 </html>
