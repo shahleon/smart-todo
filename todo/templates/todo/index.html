@@ -23,7 +23,7 @@
 
         .topbar a {
             float: left;
-            color: #f2f2f2;
+            color: white;
             text-align: center;
             padding-left: 15px;
             text-decoration: none;
@@ -32,26 +32,13 @@
         }
 
         /* Change the color of links on hover */
-        .topbar a:hover {
+        .topbar a.tabs:hover {
           color: #ccc;
-        }
-
-        /* Add a color to the active/current link */
-        .topbar a.active {
-          background-color: #04AA6D;
-          color: white;
-        }
-
-        .sidenav hr {
-            height: 2px;
-            background-color: #0fa662;
-            border: none;
-            width: 87%;
         }
 
         .sidenav {
             height: 100%;
-            width: 200px;
+            width: 250px;
             position: fixed;
             top: 0;
             left: 0;
@@ -60,6 +47,10 @@
             padding-top: 10px;
             margin: 0;
             margin-top: 49px;
+        }
+
+        .sidenav li:hover {
+          background: #ddd;
         }
 
         .sidenav a {
@@ -77,7 +68,7 @@
         .sidenav input[type=text] {
           border:none;
           border-radius: 10px;
-          width: 75%;
+          width: 60%;
           margin-left: 10px;
           padding: 10px;
           float: left;
@@ -89,10 +80,9 @@
 
         .sidenav .addTodoList {
           padding: 9px;
-          width: 25%;
+          width: 17%;
           background: #d9d9d9;
           color: #555;
-          margin-left: 50px;
           float: left;
           text-align: center;
           font-size: 16px;
@@ -106,6 +96,15 @@
           background-color: #bbb;
         }
 
+        .sidenav hr {
+            margin-top: 50px;
+            height: 2px;
+            background-color: #0fa662;
+            border: none;
+            width: 87%;
+            display: block;
+        }
+
         .rightsidebar hr {
             height: 2px;
             background-color: #0fa662;
@@ -115,7 +114,7 @@
 
         .rightsidebar {
             height: 100%;
-            width: 400px;
+            width: 350px;
             margin-top: 49px;
             position: fixed;
             top: 0;
@@ -143,31 +142,22 @@
             display: block;
         }
 
-        .rightsidebar a:hover {
-            color: #0fa662;
-        }
-
         .rightsidebar textarea {
-            width: 375px;
-        }
-
-        ul li:hover {
-          background: #ddd;
+            width: 325px;
         }
 
         .main {
-            margin-left: 200px; /* Same as the width of the sidenav */
-            margin-right: 400px; /* Same as the width of the sidenav */
+            margin-left: 250px; /* Same as the width of the sidenav */
+            margin-right: 350px; /* Same as the width of the sidenav */
             font-size: 20px;
             padding: 0px 20px;
-            margin-top: 59px;
+            margin-top: 64px;
         }
 
         .main a {
             text-decoration: none;
             color: #0fa662;
-            float: left;
-            padding-bottom: 15px;
+            display: block;
         }
 
         /* Include the padding and border in an element's total width and height */
@@ -204,32 +194,11 @@
           background: #ddd;
         }
 
-        /* When clicked on, add a background color and strike out text */
-        .main ul li.checked {
-          background: #ccc;
-          color: #aaa;
-          {#text-decoration: line-through;#}
-        }
-
         .main ul li.done {
           background: #3d3939;
           color: #fff;
           text-decoration: line-through;
         }
-
-        /* Add a "checked" mark when clicked on */
-        {#.main ul li.checked::before {#}
-        {#  content: '';#}
-        {#  position: absolute;#}
-        {#  border-color: #fff;#}
-        {#  border-style: solid;#}
-        {#  border-width: 0 2px 2px 0;#}
-        {#  top: 10px;#}
-        {#  left: 16px;#}
-        {#  transform: rotate(45deg);#}
-        {#  height: 15px;#}
-        {#  width: 7px;#}
-        {#}#}
 
         /* Style the close button */
         .main .close {
@@ -260,7 +229,7 @@
 
         /* Style the input text*/
         .main input[type=text] {
-          border:none;
+          border: none;
           border-radius: 10px;
           width: 75%;
           padding: 10px;
@@ -301,16 +270,16 @@
           background-color: #bbb;
         }
 
-        .amazon-button {
+        .add-template-button {
             display: inline-block;
             outline: 0;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
             background: #0fa662;
             border: 1px solid #FCD200;
-            font-size: 13px;
-            height: 31px;
+            font-size: 16px;
+            height: 37px;
             padding: 0 11px;
             margin-top: 5px;
             text-align: center;
@@ -330,15 +299,14 @@
 <body>
     {% load todo_extras %}
     <div class="topbar">
-        <a class="active" href="/">To-Done</a>
-        <a href="/todo">Todo</a>
-        <a href="/templates">Templates</a>
+        <a href="/">To-Done</a>
+        <a class="tabs" href="/todo">Todo</a>
+        <a class="tabs" href="/templates">Templates</a>
     </div>
     <ul class="sidenav">
         {% for list in latest_lists %}
             <li><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></li>
         {% endfor %}
-        <br>
         <input type="text" id="todoListInput" placeholder="New Todo List">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
         <hr>
@@ -351,9 +319,6 @@
         {% for list in latest_lists %}
             <div id="myDIV" class="header">
                 <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
-                <br>
-                <br>
-                <br>
                 <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
                 <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
             </div>
@@ -379,7 +344,7 @@
         <form action="/templates/new-from-todo" method="post">
             {% csrf_token %}
             <input type="hidden" name="todo" id="todo-{{ list.id }}" value="{{ list.id }}">
-            <button class="amazon-button" onclick="">Save As Template</button>
+            <button class="add-template-button" onclick="">Save As Template</button>
         </form>
         {% endfor %}
     </div>
@@ -422,14 +387,6 @@ function removeListItem() {
     }
     httpRequest.send(JSON.stringify(params))
 }
-
-// Add a "checked" symbol when clicking on a list item
-{#var list = document.getElementById("myUL");#}
-{#list.addEventListener('click', function(ev) {#}
-{#  if (ev.target.tagName === 'LI') {#}
-{#    ev.target.classList.toggle('checked');#}
-{#  }#}
-{#, false);#}
 
 // When click a list item, restore all othe
 var list = document.getElementsByClassName("listItemsUnorderedList");
