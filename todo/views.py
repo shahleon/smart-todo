@@ -148,7 +148,7 @@ def updateListItem(request, item_id):
         except IntegrityError as e:
             print(str(e))
             print("unknown error occurs when trying to update todo list item text")
-        return redirect("index")
+        return redirect("/")
     else:
         return redirect("index")
 
