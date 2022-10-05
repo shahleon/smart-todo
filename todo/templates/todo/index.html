@@ -36,6 +36,19 @@
           color: #ccc;
         }
 
+        .topbar ul {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .topbar ul li {
+            display: inline-block;
+            color: #f2f2f2;
+            text-align: center;
+        }
+
         .sidenav {
             height: 100%;
             width: 250px;
@@ -89,7 +102,7 @@
           cursor: pointer;
           transition: 0.3s;
           border-radius: 10px;
-          display: inline-block
+          display: inline-block;
         }
 
         .sidenav .addTodoList:hover {
@@ -154,10 +167,11 @@
             margin-top: 64px;
         }
 
-        .main a {
+        .main h2 a {
             text-decoration: none;
             color: #0fa662;
             display: block;
+            padding-left: 3px;
         }
 
         /* Include the padding and border in an element's total width and height */
@@ -272,12 +286,10 @@
 
         .add-template-button {
             display: inline-block;
-            outline: 0;
             cursor: pointer;
             border-radius: 10px;
-            box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
             background: #0fa662;
-            border: 1px solid #FCD200;
+            border: 0;
             font-size: 16px;
             height: 37px;
             padding: 0 11px;
@@ -287,10 +299,10 @@
             min-width: 200px;
             font-weight: 500;
             color: #f9f9f9;
-            :hover{
-                background: #bbb;
-                border-color: #F2C200;
-                box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+        }
+
+        .add-template-button:hover{
+            background: #0b8f54;
         }
     </style>
     <meta charset="UTF-8">
@@ -299,15 +311,17 @@
 <body>
     {% load todo_extras %}
     <div class="topbar">
-        <a href="/">To-Done</a>
-        <a class="tabs" href="/todo">Todo</a>
-        <a class="tabs" href="/templates">Templates</a>
-		<ul style="list-style-type: none; margin: 0; padding: 0; overflow: hidden">
+        <ul>
+            <li><a href="/">To-Done</a></li>
+            <li><a class="tabs" href="/todo">Lists</a></li>
+            <li><a class="tabs" href="/templates">Templates</a></li>
+        </ul>
+		<ul style="float: right;">
 		{% if user.is_authenticated %}
-		  <li style="float: right;"><a href="/logout" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Logout</a></li>
-		  <li style="float: right;"><a href="#" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Welcome, {{user.username}}</a></li>
+            <li><a href="#">Welcome, {{user.username}}</a></li>
+		  <li><a class="tabs" href="/logout">Logout</a></li>
 		{% else %}
-		  <li style="float: right;"><a href="/login" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Login</a></li>
+		  <li><a class="tabs" href="/login">Login</a></li>
 		{% endif %}
 		</ul>
     </div>
