@@ -126,7 +126,7 @@
             margin-top: 64px;
         }
 
-        .main h2 {
+        .main h2 a {
             text-decoration: none;
             color: #0fa662;
             display: block;
@@ -292,7 +292,7 @@
 
     <div class="main">
         {% for template in templates %}
-            <h2>{{ template.title_text }}</h2>
+            <h2><a href="/templates/{{ template.id }}">{{ template.title_text }}</a></h2>
             <ul id="myUL">
                 {% for template_item in template.templateitem_set.all %}
                     <li>{{ template_item }}</li>

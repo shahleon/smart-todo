@@ -336,7 +336,7 @@
     <div class="main">
         {% for list in latest_lists %}
             <div id="myDIV" class="header">
-                <h2><a href="/{{ list.id }}/">{{ list.title_text }}</a></h2>
+                <h2><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></h2>
                 <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
                 <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
             </div>
