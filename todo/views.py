@@ -10,8 +10,11 @@ from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem
 
 
-def index(request):
-    latest_lists = List.objects.order_by('-updated_on')[:5]
+def index(request, list_id=0):
+    if list_id != 0:
+        latest_lists = List.objects.filter(id=list_id)
+    else:
+        latest_lists = List.objects.order_by('-updated_on')[:5]
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.order_by('created_on')
     context = {
@@ -23,15 +26,16 @@ def index(request):
 
 
 def listitems(request, list_id):
-    todo_list = get_object_or_404(List, pk=list_id)
-    latest_lists = List.objects.order_by('-updated_on')[:5]
-    latest_list_items = ListItem.objects.order_by('list_id')
-    context = {
-        'latest_lists': latest_lists,
-        'list': todo_list,
-        'latest_list_items': latest_list_items,
-    }
-    return render(request, 'todo/list_items.html', context)
+    # todo_list = get_object_or_404(List, pk=list_id)
+    # latest_lists = List.objects.filter(id=list_id)
+    # latest_list_items = ListItem.objects.order_by('list_id')
+    # saved_templates = Template.objects.order_by('created_on')
+    # context = {
+    #     'latest_lists': latest_lists,
+    #     'latest_list_items': latest_list_items,
+    #     'templates': saved_templates
+    # }
+    return redirect('index', list_id)
 
 
 def login(request):
@@ -75,8 +79,11 @@ def template_from_todo(request):
     return redirect("/templates")
 
 
-def template(request):
-    saved_templates = Template.objects.order_by('created_on')
+def template(request, template_id=0):
+    if template_id != 0:
+        saved_templates = Template.objects.filter(id=template_id)
+    else:
+        saved_templates = Template.objects.order_by('created_on')
     context = {
         'templates': saved_templates
     }
