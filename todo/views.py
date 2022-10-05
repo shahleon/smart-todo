@@ -101,7 +101,6 @@ def password_reset_request(request):
                         send_email = EmailMessage(subject, email, settings.EMAIL_HOST_USER, [user.email])
                         send_email.fail_silently = False
                         send_email.send()
-						#send_mail(subject, email, 'ckuo3@ncsu.edu' , [user.email], fail_silently=False)
                     except BadHeaderError:
                     
                         return HttpResponse('Invalid header found')
