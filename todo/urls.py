@@ -1,10 +1,11 @@
 from django.urls import path
 from . import views
 
+app_name = "todo"
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('todo', views.index, name='index'),
-    path('login', views.login, name='login'),
     path('todo/<int:list_id>', views.listitems, name='list_items'),
     path('todo/new-from-template', views.todo_from_template, name='todo_from_template'),
     path('templates', views.template, name='template'),
@@ -17,4 +18,8 @@ urlpatterns = [
     path('markListItem', views.markListItem, name='markListItem'),
     path('addNewListItem', views.addNewListItem, name='addNewListItem'),
     path('updateListItem/<int:item_id>', views.updateListItem, name='updateListItem'),
+    path("register", views.register_request, name="register"),
+    path("login", views.login_request, name="login"),
+    path("logout", views.logout_request, name= "logout"),
+    path("password_reset", views.password_reset_request, name="password_reset")
 ]

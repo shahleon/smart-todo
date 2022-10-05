@@ -68,21 +68,22 @@
         <h2>To-Done</h2>
     </div>
     <center> <h1>Login</h1> </center>
-    <form>
-        <div class="container">
-            <label>Username : </label>
-            <br>
-            <input type="text" placeholder="Enter Username" name="username" required>
-            <br>
-            <label>Password : </label>
-            <br>
-            <input type="password" placeholder="Enter Password" name="password" required>
-            <br>
-            <button type="submit">Login</button>
-            <br>
-            <input type="checkbox" checked="checked"> Remember me
-            <div class="right">Forgot <a href="#"> password? </a></div>
-        </div>
-        </form>
+
+	{% block content %}      
+
+	{% load crispy_forms_tags %}
+
+	<!--Login--> 
+	<div class="container py-5">
+	  <form method="POST">
+		{% csrf_token %}
+		{{ login_form|crispy }}
+		<button class="btn btn-primary" type="submit">Login</button>
+	  </form>
+	  <p class="text-center"><a href="/register">Create an account</a>.</p>
+	  <p class="text-center"><a href="/password_reset">Forget password</a>.</p>
+	</div>
+
+	{% endblock %}
 </body>
 </html>

@@ -302,6 +302,14 @@
         <a href="/">To-Done</a>
         <a class="tabs" href="/todo">Todo</a>
         <a class="tabs" href="/templates">Templates</a>
+		<ul style="list-style-type: none; margin: 0; padding: 0; overflow: hidden">
+		{% if user.is_authenticated %}
+		  <li style="float: right;"><a href="/logout" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Logout</a></li>
+		  <li style="float: right;"><a href="#" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Welcome, {{user.username}}</a></li>
+		{% else %}
+		  <li style="float: right;"><a href="/login" style="display: block; padding: 15px; color: #f2f2f2; text-align: center;">Login</a></li>
+		{% endif %}
+		</ul>
     </div>
     <ul class="sidenav">
         {% for list in latest_lists %}
