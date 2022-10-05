@@ -329,7 +329,6 @@
         {% for list in latest_lists %}
             <li><a href="/todo/{{ list.id }}">{{ list.title_text }}</a></li>
         {% endfor %}
-        <br>
         <input type="text" id="todoListInput" placeholder="New Todo List">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
     </ul>
