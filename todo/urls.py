@@ -8,6 +8,7 @@ urlpatterns = [
     path('todo', views.index, name='index'),
     path('todo/<int:list_id>', views.listitems, name='list_items'),
     path('todo/new-from-template', views.todo_from_template, name='todo_from_template'),
+    path('delete-todo', views.delete_todo, name='delete_todo'),
     path('templates', views.template, name='template'),
     path('templates/new-from-todo', views.template_from_todo, name='template_from_todo'),
     path('updateListItem', views.updateListItem, name='updateListItem'),
