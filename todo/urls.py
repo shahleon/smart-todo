@@ -5,11 +5,13 @@ app_name = "todo"
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('todo', views.index, name='index'),
-    path('todo/<int:list_id>', views.listitems, name='list_items'),
+    path('todo', views.index, name='todo'),
+    # path('login', views.login, name='login'),
+    path('todo/<int:list_id>', views.index, name='todo_list_id'),
     path('todo/new-from-template', views.todo_from_template, name='todo_from_template'),
     path('delete-todo', views.delete_todo, name='delete_todo'),
     path('templates', views.template, name='template'),
+    path('templates/<int:template_id>', views.template, name='template'),
     path('templates/new-from-todo', views.template_from_todo, name='template_from_todo'),
     path('updateListItem', views.updateListItem, name='updateListItem'),
     path('removeListItem', views.removeListItem, name='removeListItem'),
