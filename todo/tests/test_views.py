@@ -8,14 +8,6 @@ from django.contrib.auth import authenticate
 from todo.models import List, ListItem, Template, TemplateItem
 import json
 
-
-class TodoListTestCase(TestCase):
-    def testSavingTodoList(self):
-        response = self.client.get(reverse('todo:createNewTodoList'))
-        self.assertEqual(response.status_code, 302)
-        print(response)
-
-
 class TestViews(TestCase):
     def setUp(self):
         # Every test needs access to the client and request factory.
@@ -23,6 +15,11 @@ class TestViews(TestCase):
         self.factory = RequestFactory()
         self.user = User.objects.create_user(
             username='jacob', email='jacob@…', password='top_secret')
+
+    def testSavingTodoList(self):
+        response = self.client.get(reverse('todo:createNewTodoList'))
+        self.assertEqual(response.status_code, 302)
+        # print(response)
 
     def test_template_from_todo_redirect(self):
         client = self.client
