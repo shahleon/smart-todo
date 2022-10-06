@@ -4,41 +4,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>To-Done</title>
 <style>
+	body {
+        font-family: Calibri, Helvetica, sans-serif;
+        margin: 0;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
     .topbar {
         overflow: hidden;
         background-color: #0fa662;
-        padding: 0px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1;
     }
 
-    .topbar h2 {
+    .topbar a {
         float: left;
-        color: #f2f2f2;
+        color: white;
         text-align: center;
         padding-left: 15px;
         text-decoration: none;
+        font-size: 25px;
+        padding: 10px;
+    }
+
+    .topbar ul {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .topbar ul li {
+        display: inline-block;
+        color: #f2f2f2;
+        text-align: center;
     }
 
     h1 {
         color: #0fa662;
+        text-align: center;
     }
 
-    body {
-      font-family: Calibri, Helvetica, sans-serif;
-      margin: 0;
-    }
-
-    button {
-        background-color: #0fa662;
-        width: 100%;
-        color: white;
-        padding: 15px;
-        margin: 10px 0px;
-        border: none;
+    .main button {
+        display: inline-block;
         cursor: pointer;
         border-radius: 10px;
+        background: #0fa662;
+        border: 0;
+        font-size: 16px;
+        height: 37px;
+        padding: 0 11px;
+        margin-top: 5px;
+        text-align: center;
+        width: 100%;
+        min-width: 200px;
+        font-weight: 500;
+        color: #f9f9f9;
     }
 
-    input[type=text], input[type=password] {
+    .main button:hover {
+        background: #0b8f54;
+    }
+
+    input[type=text], input[type=password], input[type=email] {
         width: 100%;
         margin: 8px 0;
         padding: 12px 20px;
@@ -49,10 +83,6 @@
         box-shadow: 1px 1px 5px #555 inset;
     }
 
-    button:hover {
-        opacity: 0.7;
-    }
-
     .container {
         margin: auto;
         width: 400px;
@@ -61,29 +91,37 @@
     .right {
         float: right;
     }
+
+    .main {
+            font-size: 20px;
+            padding: 0px 20px;
+            margin-top: 70px;
+    }
 </style>
 </head>
 <body>
     <div class="topbar">
-        <h2>To-Done</h2>
+        <ul><li><a href="/">To-Done</a></li></ul>
     </div>
-    <center> <h1>Login</h1> </center>
+	<div class="main">
+		<h1>Login</h1>
 
-	{% block content %}      
+		{% block content %}
 
-	{% load crispy_forms_tags %}
+		{% load crispy_forms_tags %}
 
-	<!--Login--> 
-	<div class="container py-5">
-	  <form method="POST">
-		{% csrf_token %}
-		{{ login_form|crispy }}
-		<button class="btn btn-primary" type="submit">Login</button>
-	  </form>
-	  <p class="text-center"><a href="/register">Create an account</a>.</p>
-	  <p class="text-center"><a href="/password_reset">Forget password</a>.</p>
+		<!--Login-->
+		<div class="container py-5">
+		  <form method="POST">
+			{% csrf_token %}
+			{{ login_form|crispy }}
+			<button class="btn btn-primary" type="submit">Login</button>
+		  </form>
+		  <p class="text-center"><a href="/register">Create an account</a>.</p>
+		  <p class="text-center"><a href="/password_reset">Forget password</a>.</p>
+		</div>
+
+		{% endblock %}
 	</div>
-
-	{% endblock %}
 </body>
 </html>

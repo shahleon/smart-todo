@@ -4,27 +4,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>To-Done</title>
 <style>
+    body {
+        font-family: Calibri, Helvetica, sans-serif;
+        margin: 0;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
     .topbar {
         overflow: hidden;
         background-color: #0fa662;
-        padding: 0px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1;
     }
 
-    .topbar h2 {
+    .topbar a {
         float: left;
-        color: #f2f2f2;
+        color: white;
         text-align: center;
         padding-left: 15px;
         text-decoration: none;
+        font-size: 25px;
+        padding: 10px;
+    }
+
+    .topbar ul {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .topbar ul li {
+        display: inline-block;
+        color: #f2f2f2;
+        text-align: center;
     }
 
     h1 {
         color: #0fa662;
-    }
-
-    body {
-      font-family: Calibri, Helvetica, sans-serif;
-      margin: 0;
+        text-align: center;
     }
 
     button {
@@ -61,26 +85,57 @@
     .right {
         float: right;
     }
+
+    .main {
+            font-size: 20px;
+            padding: 0px 20px;
+            margin-top: 70px;
+    }
+
+    .main button {
+        display: inline-block;
+        cursor: pointer;
+        border-radius: 10px;
+        background: #0fa662;
+        border: 0;
+        font-size: 16px;
+        height: 37px;
+        padding: 0 11px;
+        margin-top: 5px;
+        text-align: center;
+        width: 100%;
+        min-width: 200px;
+        font-weight: 500;
+        color: #f9f9f9;
+    }
+
+    .main button:hover {
+        background: #0b8f54;
+    }
 </style>
 </head>
 <body>
+	<div class="topbar">
+        <ul><li><a href="/">To-Done</a></li></ul>
+    </div>
 
+	<div class="main">
+		{% block content %}
 
-	{% block content %} 
+		{% load crispy_forms_tags %}
 
-	{% load crispy_forms_tags %}         
+		<!--Register-->
+		<div class="container py-5">
+			<h1>Register</h1>
+			<form method="POST">
+				{% csrf_token %}
+				{{ register_form|crispy }}
+				<button class="btn btn-primary" type="submit">Register</button>
+			</form>
+			<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+		</div>
 
-	<!--Register--> 
-	<div class="container py-5">
-		<h1>Register</h1>
-		<form method="POST">
-			{% csrf_token %}
-			{{ register_form|crispy }}                    
-			<button class="btn btn-primary" type="submit">Register</button>
-		</form>
-		<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+		{% endblock %}
 	</div>
-
-	{% endblock %}
 </body>
 </html>
