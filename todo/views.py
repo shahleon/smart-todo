@@ -25,12 +25,14 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
 def index(request, list_id=0):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if list_id != 0:
-        latest_lists = List.objects.filter(id=list_id)
+        latest_lists = List.objects.filter(id=list_id, user_id_id=request.user.id)
     else:
-        latest_lists = List.objects.order_by('-updated_on')[:5]
+        latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
     latest_list_items = ListItem.objects.order_by('list_id')
-    saved_templates = Template.objects.order_by('created_on')
+    saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
@@ -52,13 +54,15 @@ def index(request, list_id=0):
 
 
 def todo_from_template(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     template_id = request.POST['template']
     fetched_template = get_object_or_404(Template, pk=template_id)
     todo = List.objects.create(
         title_text=fetched_template.title_text,
         created_on=timezone.now(),
-        updated_on=timezone.now()
-        # user_id=1 // TODO: assign this to a user
+        updated_on=timezone.now(),
+        user_id_id=request.user.id
     )
     for template_item in fetched_template.templateitem_set.all():
         ListItem.objects.create(
@@ -72,12 +76,15 @@ def todo_from_template(request):
 
 
 def template_from_todo(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     todo_id = request.POST['todo']
     fetched_todo = get_object_or_404(List, pk=todo_id)
     new_template = Template.objects.create(
         title_text=fetched_todo.title_text,
         created_on=timezone.now(),
-        updated_on=timezone.now()
+        updated_on=timezone.now(),
+        user_id_id=request.user.id
     )
     for todo_item in fetched_todo.listitem_set.all():
         TemplateItem.objects.create(
@@ -89,6 +96,8 @@ def template_from_todo(request):
 
 
 def delete_todo(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     todo_id = request.POST['todo']
     fetched_todo = get_object_or_404(List, pk=todo_id)
     fetched_todo.delete()
@@ -96,10 +105,12 @@ def delete_todo(request):
 
 
 def template(request, template_id=0):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if template_id != 0:
         saved_templates = Template.objects.filter(id=template_id)
     else:
-        saved_templates = Template.objects.order_by('created_on')
+        saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     context = {
         'templates': saved_templates
     }
@@ -108,6 +119,8 @@ def template(request, template_id=0):
 
 @csrf_exempt
 def removeListItem(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -127,6 +140,8 @@ def removeListItem(request):
 
 @csrf_exempt
 def updateListItem(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         updated_text = request.POST['note']
         # print(request.POST)
@@ -155,6 +170,8 @@ def updateListItem(request, item_id):
 
 @csrf_exempt
 def addNewListItem(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -184,6 +201,8 @@ def markListItem(request):
     """
     Mark a list item as done or undo it
     """
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -213,6 +232,8 @@ def markListItem(request):
 
 @csrf_exempt
 def getListItemByName(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -238,6 +259,8 @@ def getListItemByName(request):
 
 @csrf_exempt
 def getListItemById(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -266,20 +289,25 @@ def getListItemById(request):
 
 @csrf_exempt
 def createNewTodoList(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         list_name = body['list_name']
         create_on = body['create_on']
         create_on_time = datetime.datetime.fromtimestamp(create_on)
-        print(list_name)
-        print(create_on)
+        # print(list_name)
+        # print(create_on)
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list = List(title_text=list_name, created_on=create_on_time, updated_on=create_on_time)
+                user_id = request.user.id
+                print(user_id)
+                todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time)
                 todo_list.save()
-        except IntegrityError:
+        except IntegrityError as e:
+            print(str(e))
             print("unknown error occurs when trying to create and save a new todo list")
             return HttpResponse("Request failed when operating on database")
         return HttpResponse("Success!")  # Sending an success response
