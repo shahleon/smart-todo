@@ -28,6 +28,11 @@ jobs:
     - name: Run Tests
       run: |
         coverage run manage.py test
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel: true
 
   coveralls_finish:
     needs: build
