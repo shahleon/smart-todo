@@ -28,6 +28,7 @@ jobs:
     - name: Run Tests
       run: |
         coverage run manage.py test
+        coverage lcov
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
