@@ -32,7 +32,7 @@
         }
 
         /* Change the color of links on hover */
-        .topbar a.tabs:hover {
+        .topbar li a.tabs:hover {
           color: #ccc;
         }
 
@@ -157,6 +157,25 @@
 
         .rightsidebar textarea {
             width: 325px;
+        }
+
+        .rightsidebar .save-button {
+            padding: 9px;
+            background: #d9d9d9;
+            color: #555;
+            float: left;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 10px;
+            display: inline-block;
+            border: 0;
+            margin-top: 10px;
+        }
+
+        .rightsidebar .save-button:hover {
+          background-color: #bbb;
         }
 
         .main {
@@ -284,7 +303,7 @@
           background-color: #bbb;
         }
 
-        .add-template-button {
+        .main .add-template-button {
             display: inline-block;
             cursor: pointer;
             border-radius: 10px;
@@ -301,8 +320,12 @@
             color: #f9f9f9;
         }
 
-        .add-template-button:hover{
+        .main .add-template-button:hover{
             background: #0b8f54;
+        }
+
+        .add-template-button.delete:hover{
+            background: #a81a0f;
         }
     </style>
     <meta charset="UTF-8">
@@ -367,7 +390,7 @@
         <form action="/delete-todo" method="post">
             {% csrf_token %}
             <input type="hidden" name="todo" id="delete-todo-{{ list.id }}" value="{{ list.id }}">
-            <button class="add-template-button" onclick="">Delete</button>
+            <button class="add-template-button delete" onclick="">Delete</button>
         </form>
         {% endfor %}
     </div>
@@ -382,7 +405,7 @@
                 <textarea id="note" name="note" rows="4" cols="50">
                 </textarea>
                 <br>
-                <input type="submit" value="Save/Update">
+                <input class="save-button" type="submit" value="Save">
             </form>
         </ul>
     {% endif %}
