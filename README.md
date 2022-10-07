@@ -3,65 +3,103 @@
 </p>
 <h2 align="center">The Only Todo List You Need</h2>
 
-[![license badge](https://img.shields.io/github/license/shahleon/cs510-homework-1)](https://github.com/shahleon/smart-todo/blob/main/LICENSE)
-[![issues badge](https://img.shields.io/github/issues/shahleon/smart-todo)](https://github.com/shahleon/smart-todo/issues)
 [![Build Status](https://img.shields.io/github/workflow/status/shahleon/smart-todo/Django%20CI/main)](https://github.com/shahleon/smart-todo/actions/workflows/django.yml)
 [![Coverage Status](https://coveralls.io/repos/github/shahleon/smart-todo/badge.svg?branch=main)](https://coveralls.io/github/shahleon/smart-todo?branch=main)
+[![license badge](https://img.shields.io/github/license/shahleon/cs510-homework-1)](https://github.com/shahleon/smart-todo/blob/main/LICENSE)
+[![issues badge](https://img.shields.io/github/issues/shahleon/smart-todo)](https://github.com/shahleon/smart-todo/issues)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7155415.svg)](https://doi.org/10.5281/zenodo.7155415)
-# To-Done
+
+# TO-DONE
 
 `to-done` lets you manage your todo list effectively with minimal effort. With a minimalistic web interface, 
 you can access your todolist on the go. Use our rich library of templates to create a new todo list very fast or create your own.
 
-<p float="middle">
-    <img src="img/todone-create-list.gif" width="600" height="300" />
-</p>
+![To-Done](img/todone-create-list.gif)
 
 Contents
 ========
 
  * [Why?](#why)
- * [Installation](#installation)
- * [Features](#features)
+ * [Features](#key-features)
+ * [Quick Start](#quick-start)
  * [Want to contribute?](#want-to-contribute)
+ * [License](#license)
+ * [Developer](#developers)
 
 ### Why?
 
 We wanted to work on something that is:
 
 + Useful, serves some real purpose
-+ Easy to start with a basic version and lends itself to adding new features incrementally to it
-+ Tasks can be somewhat easily divided among five developers, so that they can work parallely 
-+ We can learn while working on this
++ Easy to start with a basic working version and lends itself to adding new features incrementally to it
++ Easily divisible in modules/features/tasks that can be parallely done by five developers 
++ Diverse enough so that a lot of Software Engineering practices is required/involved 
 
-`to-done` is a todo list app that is actually useful, very easy to start a basic working version with 
-where a ton of new features can be added, touches upon all the aspects of web programming, database, 
-working in a team etc.
+`to-done` is a todo list app that is actually useful, very easy to create a basic working version with where a ton of new features can be added, touches upon all the aspects of web programming, database, working in a team etc.
 
-## Installation
+### Key Features
+ * [Register](#register)
+ * [Login](#login-forget-password)
+ * [Create, Update, Delete Todo Lists](#manage-todo-list)
+ * [Quickly Create Todo Lists From Existing Templates](#templates)
+ * [Create Your Own Templates](#templates)
 
-To install the project please follow the `INSTALL.md` guidelines
+### Quick Start
 
-## Features
+ * [Download](https://www.python.org/downloads/release/python-380/) and install Python 3.8.0 or higher
+ * [Install](https://docs.djangoproject.com/en/4.1/topics/install/) Django 4.1
+ * Clone the repository
+    ```bash
+    $ git clone git@github.com:shahleon/smart-todo.git
+    ```
+ * Run migrations
+    ```bash
+    $ cd smarttodo
+    $ python manage.py migrate
+    ```
+ * Start the app
+    ```bash
+    $ python manage.py runserver 8080
+    ```
+ * Point your browser at http://127.0.0.1:8080 and explore the app
 
+### Features
+
+#### Register
 <p float="middle">
-    <img src="img/todone-register.gif" width="350" height="200" />
-    <img src="img/todone-login.gif" width="350" height="200" /> 
-    <img src="img/todone-create-list.gif" width="350" height="200" />
-    <img src="img/todone-update-list.gif" width="350" height="200" />
-    <img src="img/todone-templates.gif" width="350" height="200" />
+    <img src="img/todone-register.gif" width="500" height="250" />
 </p>
 
-## Contributing
+#### Login, Forget Password
+<p float="middle">
+    <img src="img/todone-login.gif" width="500" height="250" /> 
+</p>
 
+#### Manage Todo List
+<p float="middle">
+    <img src="img/todone-create-list.gif" width="500" height="250" />
+    <br>
+    <br>
+    <img src="img/todone-update-list.gif" width="500" height="250" />
+</p>
 
-## License
+#### Templates
+<p float="middle">
+    <img src="img/todone-templates.gif" width="500" height="250" />
+</p>
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### Want to Contribute?
 
-## Developers
+Want to contribute to this project? Learn about [Contributing](CONTRIBUTING.md). Not sure where to start? Have a look at 
+the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Found a bug or have a new feature idea? Create an [Issue](https://github.com/shahleon/smart-todo/issues/new) or shoot a mail to [us](#developers)
+
+### License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+### Developers
 
 * Shahnewaz Leon (sleon3@ncsu.edu)
 * Dong Li (dli35@ncsu.edu)
