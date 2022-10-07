@@ -1,12 +1,10 @@
 from django.urls import reverse
-from django.utils import timezone
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import template_from_todo, template
+from todo.views import template_from_todo, template, delete_todo, index
 from django.utils import timezone
-from django.contrib.auth import authenticate
 from todo.models import List, ListItem, Template, TemplateItem
-import json
+
 
 class TestViews(TestCase):
     def setUp(self):
@@ -20,6 +18,34 @@ class TestViews(TestCase):
         response = self.client.get(reverse('todo:createNewTodoList'))
         self.assertEqual(response.status_code, 302)
         # print(response)
+
+    def test_delete_todo_list(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        todo = List.objects.create(
+            title_text="test list",
+            created_on=timezone.now(),
+            updated_on=timezone.now(),
+            user_id_id=self.user.id
+        )
+        ListItem.objects.create(
+            item_name="test item",
+            item_text="This is a test item on a test list",
+            created_on=timezone.now(),
+            list=todo,
+            is_done=False,
+        )
+        post = request.POST.copy()
+        post['todo'] = 1
+        request.POST = post
+        response = delete_todo(request)
+        self.assertEqual(response.status_code, 302)
+
+    def test_index(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        response = index(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_template_from_todo_redirect(self):
         client = self.client
@@ -67,3 +93,4 @@ class TestViews(TestCase):
         request.POST = post
         response = template(request, 1)
         self.assertEqual(response.status_code, 200)
+

@@ -24,6 +24,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
+
 def index(request, list_id=0):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -39,18 +40,6 @@ def index(request, list_id=0):
         'templates': saved_templates
     }
     return render(request, 'todo/index.html', context)
-
-
-# def listitems(request, list_id):
-#     todo_list = get_object_or_404(List, pk=list_id)
-#     latest_lists = List.objects.order_by('-updated_on')[:5]
-#     latest_list_items = ListItem.objects.order_by('list_id')
-#     context = {
-#         'latest_lists': latest_lists,
-#         'list': todo_list,
-#         'latest_list_items': latest_list_items,
-#     }
-#     return render(request, 'todo/list_items.html', context)
 
 
 def todo_from_template(request):
