@@ -1,4 +1,6 @@
-[![To-Done Logo](img/todone-logo.png)](https://github.com/shahleon/smart-todo)
+<p align="center">
+  <img src="img/todone-logo.png" />
+</p>
 <h2 align="center">The Only Todo List You Need</h2>
 
 [![license badge](https://img.shields.io/github/license/shahleon/cs510-homework-1)](https://github.com/shahleon/smart-todo/blob/main/LICENSE)
