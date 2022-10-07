@@ -28,8 +28,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'ckuo3@ncsu.edu'
-EMAIL_HOST_PASSWORD = 'znybdmgrizqjbuhb'
+EMAIL_HOST_USER = 'smarttodo.test@gmail.com'
+EMAIL_HOST_PASSWORD = 'yjxjuadeqtcsjhdp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
