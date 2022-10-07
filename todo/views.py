@@ -369,11 +369,13 @@ def password_reset_request(request):
                         send_email = EmailMessage(subject, email, settings.EMAIL_HOST_USER, [user.email])
                         send_email.fail_silently = False
                         send_email.send()
-						#send_mail(subject, email, 'ckuo3@ncsu.edu' , [user.email], fail_silently=False)
                     except BadHeaderError:
-
-                        return HttpResponse('Invalid header found')
-
+                        return HttpResponse('Invalid header found')                  
                     return redirect("/password_reset/done/")
+            else:
+                messages.error(request, "Not an Email from existing users!")
+        else:
+            messages.error(request, "Not an Email from existing users!")
+    
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="todo/password/password_reset.html", context={"password_reset_form":password_reset_form})
