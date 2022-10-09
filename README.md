@@ -23,6 +23,7 @@ Contents
 
  * [Why?](#why)
  * [Features](#key-features)
+ * [Upcoming Features](#upcoming-features)
  * [Quick Start](#quick-start)
  * [Want to contribute?](#want-to-contribute)
  * [License](#license)
@@ -45,6 +46,16 @@ We wanted to work on something that is:
  * [Create, Update, Delete Todo Lists](#manage-todo-list)
  * [Quickly Create Todo Lists From Existing Templates](#templates)
  * [Create Your Own Templates](#templates)
+
+### Upcoming Features
+ * Social login
+ * Color code to-do items based on priority, due date
+ * Shared lists among multiple users
+ * Context based task reminder
+ * Export and import to-do lists
+ * Gamification - earn points by finishing your tasks, show-off your productivity in social media
+ * Add tags to to-do lists for customizable grouping, easier search
+ * [List of All Planned Features for Second Phase](https://github.com/users/shahleon/projects/2/views/6)
 
 ### Quick Start
 
