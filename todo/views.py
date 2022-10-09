@@ -25,6 +25,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 
 
+# Render the home page with users' to-do lists
 def index(request, list_id=0):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -42,6 +43,7 @@ def index(request, list_id=0):
     return render(request, 'todo/index.html', context)
 
 
+# Create a new to-do list from templates and redirect to the to-do list homepage
 def todo_from_template(request):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -64,6 +66,7 @@ def todo_from_template(request):
     return redirect("/todo")
 
 
+# Create a new Template from existing to-do list and redirect to the templates list page
 def template_from_todo(request):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -84,6 +87,7 @@ def template_from_todo(request):
     return redirect("/templates")
 
 
+# Delete a to-do list
 def delete_todo(request):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -93,6 +97,7 @@ def delete_todo(request):
     return redirect("/todo")
 
 
+# Render the template list page
 def template(request, template_id=0):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -106,6 +111,7 @@ def template(request, template_id=0):
     return render(request, 'todo/template.html', context)
 
 
+# Remove a to-do list item, called by javascript function
 @csrf_exempt
 def removeListItem(request):
     if not request.user.is_authenticated:
@@ -127,6 +133,7 @@ def removeListItem(request):
         return redirect("index")
 
 
+# Update a to-do list item, called by javascript function
 @csrf_exempt
 def updateListItem(request, item_id):
     if not request.user.is_authenticated:
@@ -138,12 +145,6 @@ def updateListItem(request, item_id):
         print(item_id)
         if item_id <= 0:
             return redirect("index")
-        # form = UpdateItemTextForm(request.POST)
-        # if form.is_valid():
-        #     print("form valid")
-        # post_request = HttpRequest.POST.get()
-        # m = Like(post=likedpost) # Creating Like Object
-        # m.save()  # saving it to store in database
         try:
             with transaction.atomic():
                 todo_list_item = ListItem.objects.get(id=item_id)
@@ -157,6 +158,7 @@ def updateListItem(request, item_id):
         return redirect("index")
 
 
+# Add a new to-do list item, called by javascript function
 @csrf_exempt
 def addNewListItem(request):
     if not request.user.is_authenticated:
@@ -185,6 +187,7 @@ def addNewListItem(request):
         return JsonResponse({'item_id': -1})
 
 
+# Mark a to-do list item as done/not done, called by javascript function
 @csrf_exempt
 def markListItem(request):
     """
@@ -219,6 +222,8 @@ def markListItem(request):
     else:
         return HttpResponse("Request method is not a Post")
 
+
+# Get a to-do list item by name, called by javascript function
 @csrf_exempt
 def getListItemByName(request):
     if not request.user.is_authenticated:
@@ -246,6 +251,7 @@ def getListItemByName(request):
         return JsonResponse({'result': 'get'})  # Sending an success response
 
 
+# Get a to-do list item by id, called by javascript function
 @csrf_exempt
 def getListItemById(request):
     if not request.user.is_authenticated:
@@ -276,6 +282,7 @@ def getListItemById(request):
         return JsonResponse({'result': 'get'})  # Sending an success response
 
 
+# Create a new to-do list, called by javascript function
 @csrf_exempt
 def createNewTodoList(request):
     if not request.user.is_authenticated:
@@ -302,13 +309,9 @@ def createNewTodoList(request):
         return HttpResponse("Success!")  # Sending an success response
     else:
         return HttpResponse("Request method is not a Post")
-    # latest_lists = List.objects.order_by('-updated_on')[:5]
-    # context = {
-    #     'latest_lists': latest_lists,
-    # }
-    # return render(request, 'todo/index.html', context)
 
 
+# Register a new user account
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -322,6 +325,8 @@ def register_request(request):
     form = NewUserForm()
     return render(request=request, template_name="todo/register.html", context={"register_form":form})
 
+
+# Login a user
 def login_request(request):
 	if request.method == "POST":
 		form = AuthenticationForm(request, data=request.POST)
@@ -340,11 +345,15 @@ def login_request(request):
 	form = AuthenticationForm()
 	return render(request=request, template_name="todo/login.html", context={"login_form":form})
 
+
+# Logout a user
 def logout_request(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.")
 	return redirect("todo:index")
 
+
+# Reset user password
 def password_reset_request(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
