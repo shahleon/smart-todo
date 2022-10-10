@@ -32,11 +32,13 @@ jobs:
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
       - name: Create Documentation
-        run: python create_pdoc.py
+        run: |
+          python create_pdoc.py
+          mv docs/todo/* docs/
 
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/todo/
+          path: docs/
 
   # Deploy the artifact to GitHub pages.
   # This is a separate job so that only actions/deploy-pages has the necessary permissions.
