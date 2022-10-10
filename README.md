@@ -25,6 +25,7 @@ Contents
  * [Features](#key-features)
  * [Upcoming Features](#upcoming-features)
  * [Quick Start](#quick-start)
+ * [Documentation](#Documentation)
  * [Want to contribute?](#want-to-contribute)
  * [License](#license)
  * [Developer](#developers)
@@ -75,6 +76,9 @@ We wanted to work on something that is:
     $ python manage.py runserver 8080
     ```
  * Point your browser at http://127.0.0.1:8080 and explore the app
+
+### Documentation
+[See this page](https://shahleon.github.io/smart-todo/)
 
 ### Features
 
