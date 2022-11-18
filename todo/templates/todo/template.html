@@ -200,6 +200,13 @@
           clear: both;
         }
 
+        #noTempYet {
+            text-decoration: none;
+            color: #0fa662;
+            display: block;
+            align-items: center;
+        }
+
         /* Style the input text*/
         .main input[type=text] {
           border: none;
@@ -303,6 +310,8 @@
                     <button class="add-template-button" onclick="">Create Todo Using This Template</button>
                 </form>
             </ul>
+        {% empty %}
+        <h2 id="noTempYet">You don't have any template!</h2>
         {% endfor %}
     </div>
 </body>
