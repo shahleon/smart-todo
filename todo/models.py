@@ -7,6 +7,7 @@ class List(models.Model):
     updated_on = models.DateTimeField()
     list_tag = models.CharField(max_length=50, default='none')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    is_shared = models.BooleanField(default=False)
 
     objects = models.Manager()
 
@@ -36,7 +37,7 @@ class ListItem(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "%s: %s" % (self.item_text, self.is_done)
+        return "%s: %s" % (str(self.item_text), self.is_done)
 
 
 class Template(models.Model):
