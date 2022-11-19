@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
-from todo.models import List, ListItem, Template, TemplateItem, ListTags
+from todo.models import List, ListItem, Template, TemplateItem, ListTags, SharedUsers, SharedList
 
 from todo.forms import NewUserForm
 from django.conf import settings
@@ -315,6 +315,8 @@ def createNewTodoList(request):
         list_name = body['list_name']
         create_on = body['create_on']
         tag_name = body['list_tag']
+        shared_user = body['shared_user']
+        print(shared_user)
         create_on_time = datetime.datetime.fromtimestamp(create_on)
         # print(list_name)
         # print(create_on)
@@ -322,14 +324,39 @@ def createNewTodoList(request):
         try:
             with transaction.atomic():
                 user_id = request.user.id
-                print(user_id)
+                # print(user_id)
                 todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time, list_tag=tag_name)
                 if body['create_new_tag']:
-                    print('new tag')
+                    # print('new tag')
                     new_tag = ListTags(user_id_id=user_id, tag_name=tag_name, created_on=create_on_time)
                     new_tag.save()
 
                 todo_list.save()
+                print(todo_list.id)
+
+                # Progress
+                if body['shared_user']:
+                    user_list = shared_user.split(' ')
+                    new_shared_user = SharedUsers(list_id=todo_list, shared_user=shared_user)
+                    new_shared_user.save()
+
+                    for user in user_list:
+
+                        try:
+                            query_user = User.objects.get(username=user)
+                        except User.DoesNotExist:
+                            query_user = None
+
+                        if query_user:
+
+                            shared_list_id = SharedList.objects.get(user=query_user).shared_list_id
+                            shared_list_id = shared_list_id + str(todo_list.id) + " "
+                            SharedList.objects.filter(user=query_user).update(shared_list_id=shared_list_id)
+                            
+                        else:
+                            print("No user named " + user + " found!")
+
+
         except IntegrityError as e:
             print(str(e))
             print("unknown error occurs when trying to create and save a new todo list")
@@ -343,9 +370,14 @@ def createNewTodoList(request):
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
-        print(form)
         if form.is_valid():
             user = form.save()
+            print(user)
+
+            # Add a empty list to SharedList table
+            shared_list = SharedList(user=User.objects.get(username=user), shared_list_id="")
+            shared_list.save()
+
             login(request, user)
             messages.success(request, "Registration successful." )
             return redirect("todo:index")
