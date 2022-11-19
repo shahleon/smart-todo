@@ -60,3 +60,21 @@ class TemplateItem(models.Model):
 
     def __str__(self):
         return "%s" % self.item_text
+
+class SharedUsers(models.Model):
+    list_id = models.ForeignKey(List, on_delete=models.CASCADE)
+    shared_user = models.CharField(max_length=200)
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return "%s" % str(self.list_id)
+
+class SharedList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    shared_list_id = models.CharField(max_length=200)
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return "%s" % str(self.user)
