@@ -83,6 +83,7 @@
           border-radius: 10px;
           width: 200px;
           margin-left: 10px;
+          margin-top: 5px;
           padding: 10px;
           float: left;
           font-size: 16px;
@@ -102,7 +103,7 @@
         #listTags {
           border:none;
           border-radius: 10px;
-          width: 175px;
+          /* width: 175px; */
           margin-left: 10px;
           padding: 10px;
           float: left;
@@ -130,13 +131,14 @@
           width: 17%;
           background: #d9d9d9;
           color: #555;
-          float: left;
+          float: right;
+          margin-top: 5px;
           text-align: center;
           font-size: 16px;
           cursor: pointer;
           transition: 0.3s;
           border-radius: 10px;
-          display: inline-block;
+          display: block;
         }
 
         .sidenav .addTodoList:hover {
@@ -415,6 +417,7 @@
             <option value="new">--create new tag--</option>
         </select>
         <input type="hidden" id="newListTag" placeholder="New List tag">
+        <input type="text" id="sharedUser" placeholder="Share this list with...">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
     </div>
 
@@ -696,6 +699,10 @@ function newTodoList() {
     var selectedTag = document.getElementById("listTags").value;
     var listTag = selectedTag;
     var create_new_tag = false;
+    var sharedUser = document.getElementById("sharedUser").value;
+
+    console.log(sharedUser);
+
     if(selectedTag==='new'){
         listTag = document.getElementById("newListTag").value;
         create_new_tag = true;
@@ -726,7 +733,8 @@ function newTodoList() {
             "list_name": inputValue,
             "create_on": create_on_timestamp,
             "list_tag": listTag,
-            "create_new_tag": create_new_tag
+            "create_new_tag": create_new_tag,
+            "shared_user": sharedUser,
         }
 
         httpRequest.send(JSON.stringify(params))
