@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
-from todo.models import List, ListItem, Template, TemplateItem, ListTags
+from todo.models import List, ListItem, Template, TemplateItem, ListTags, SharedUsers, SharedList
 
 from todo.forms import NewUserForm
 from django.conf import settings
@@ -29,21 +29,73 @@ from django.core.mail import EmailMessage
 def index(request, list_id=0):
     if not request.user.is_authenticated:
         return redirect("/login")
+    
+    shared_list = []
+
     if list_id != 0:
-        latest_lists = List.objects.filter(id=list_id, user_id_id=request.user.id)
+        # latest_lists = List.objects.filter(id=list_id, user_id_id=request.user.id)
+        latest_lists = List.objects.filter(id=list_id)
+
     else:
         latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
+        query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
+        shared_list_id = query_list_str.split(" ")
+        shared_list_id.remove("")
+
+        latest_lists = list(latest_lists)
+
+        for list_id in shared_list_id:
+        
+            try:
+                query_list = List.objects.get(id=int(list_id))
+            except List.DoesNotExist:
+                query_list = None
+
+            if query_list:
+                shared_list.append(query_list)
+        
+    
+
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
-    print(list_tags)
+    
+    # latest_lists.append(shared_list)
+    # print(latest_lists[0].updated_on)
+    # quickSort(latest_lists, 0, len(latest_lists) - 1)
+        
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
         'templates': saved_templates,
-        'list_tags': list_tags
+        'list_tags': list_tags,
+        'shared_list': shared_list,
     }
     return render(request, 'todo/index.html', context)
+
+
+# def partition(arr, low, high):
+
+#     pivot = arr[high].updated_on
+#     i = low - 1
+
+#     for j in range(low, high):
+#         if arr[j].updated_on <= pivot:
+#             i = i + 1
+#             (arr[i], arr[j]) = (arr[j], arr[i])
+
+#     (arr[i + 1], arr[high]) = (arr[high], arr[i + 1])
+
+#     return i + 1
+
+# def quickSort(arr, low, high):
+
+#     print(arr[0].updated_on)
+#     if low < high:
+#         pi = partition(arr, low, high)
+#         quickSort(arr, low, pi - 1)
+#         quickSort(arr, pi + 1, high)
+
 
 
 # Create a new to-do list from templates and redirect to the to-do list homepage
@@ -67,6 +119,7 @@ def todo_from_template(request):
             is_done=False,
         )
     return redirect("/todo")
+
 
 
 # Create a new Template from existing to-do list and redirect to the templates list page
@@ -307,14 +360,19 @@ def getListItemById(request):
 # Create a new to-do list, called by javascript function
 @csrf_exempt
 def createNewTodoList(request):
+
     if not request.user.is_authenticated:
         return redirect("/login")
+
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         list_name = body['list_name']
         create_on = body['create_on']
         tag_name = body['list_tag']
+        shared_user = body['shared_user']
+        user_not_found = []
+        print(shared_user)
         create_on_time = datetime.datetime.fromtimestamp(create_on)
         # print(list_name)
         # print(create_on)
@@ -322,19 +380,62 @@ def createNewTodoList(request):
         try:
             with transaction.atomic():
                 user_id = request.user.id
-                print(user_id)
+                # print(user_id)
                 todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time, list_tag=tag_name)
                 if body['create_new_tag']:
-                    print('new tag')
+                    # print('new tag')
                     new_tag = ListTags(user_id_id=user_id, tag_name=tag_name, created_on=create_on_time)
                     new_tag.save()
 
                 todo_list.save()
+                print(todo_list.id)
+
+                # Progress
+                if body['shared_user']:
+                    user_list = shared_user.split(' ')
+                    
+
+                    k = len(user_list)-1
+                    i = 0
+                    while i <= k:
+
+                        try:
+                            query_user = User.objects.get(username=user_list[i])
+                        except User.DoesNotExist:
+                            query_user = None
+
+                        if query_user:
+
+                            shared_list_id = SharedList.objects.get(user=query_user).shared_list_id
+                            shared_list_id = shared_list_id + str(todo_list.id) + " "
+                            SharedList.objects.filter(user=query_user).update(shared_list_id=shared_list_id)
+                            i += 1
+                            
+                        else:
+                            print("No user named " + user_list[i] + " found!")
+                            user_not_found.append(user_list[i])
+                            user_list.remove(user_list[i])
+                            k -= 1
+
+                    shared_user = ' '.join(user_list)
+                    new_shared_user = SharedUsers(list_id=todo_list, shared_user=shared_user)
+                    new_shared_user.save()
+
+                    print(user_not_found)
+
+                    if user_list:
+                        List.objects.filter(id=todo_list.id).update(is_shared=True)
+
         except IntegrityError as e:
             print(str(e))
             print("unknown error occurs when trying to create and save a new todo list")
             return HttpResponse("Request failed when operating on database")
-        return HttpResponse("Success!")  # Sending an success response
+        # return HttpResponse("Success!")  # Sending an success response
+        context = {
+            'user_not_found': user_not_found,
+        }
+        # return HttpResponse("Success!")
+        return redirect("/todo")
     else:
         return HttpResponse("Request method is not a Post")
 
@@ -343,9 +444,14 @@ def createNewTodoList(request):
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
-        print(form)
         if form.is_valid():
             user = form.save()
+            print(user)
+
+            # Add a empty list to SharedList table
+            shared_list = SharedList(user=User.objects.get(username=user), shared_list_id="")
+            shared_list.save()
+
             login(request, user)
             messages.success(request, "Registration successful." )
             return redirect("todo:index")
