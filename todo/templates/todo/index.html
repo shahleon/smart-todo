@@ -533,8 +533,8 @@
                       <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
                     </div>
                     <div class="form-group">
-                      <label for="date">Due Date</label>
-                      <input type="date" class="form-control" id="date">
+                      <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                      <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                     </div>
                 </form>
                 <div>
@@ -733,6 +733,7 @@ function newElement(list_id, saved_to_database = true) {
     {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
     var inputBox = document.getElementById("InputText_" + list_id.toString());
     var inputValue = inputBox.value;
+    var inputDue = document.getElementById("InputDue_" + list_id.toString()).value;
     // var unorderedList = inputBox.parentElement.nextElementSibling
 
     {#var list_html_tag_id =  #}
@@ -740,6 +741,9 @@ function newElement(list_id, saved_to_database = true) {
     li.className = "listItem";
     if (inputValue === '') {
         alert("You must write something!");
+    }
+    else if (inputDue === '') {
+        alert("You must enter due date!")
     }
     // else {
     //     unorderedList.appendChild(li);
@@ -790,7 +794,7 @@ function newElement(list_id, saved_to_database = true) {
         }
         httpRequest.send(JSON.stringify(params))
     }
-    window.location.reload();
+    // window.location.reload();
     {#else {#}
     {#    return#}
     {#}#}
