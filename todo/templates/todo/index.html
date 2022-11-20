@@ -293,7 +293,8 @@
 
         /* Style the header */
         .main .header {
-          color: white;
+          /* color: white; */
+          color: black;
           display: block;
         }
 
@@ -310,7 +311,20 @@
           border-radius: 10px;
           width: 75%;
           padding: 10px;
-          float: left;
+          /* float: left; */
+          font-size: 16px;
+          box-shadow: 1px 1px 5px #555 inset;
+          white-space: nowrap;
+          display: block;
+        }
+
+        /* Style the input date*/
+        .main input[type=date] {
+          border: none;
+          border-radius: 10px;
+          width: 75%;
+          padding: 10px;
+          /* float: left; */
           font-size: 16px;
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
@@ -446,8 +460,21 @@
                 </a>
 
             </h2>
-            <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-            <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+            <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+            <form>
+                <div class="form-group">
+                  <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                  <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                </div>
+                <div class="form-group">
+                  <label for="date">Due Date</label>
+                  <input type="date" class="form-control" id="date">
+                </div>
+            </form>
+            <div>
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            </div>
         </div>
         <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
             {% for list_item in latest_list_items %}
@@ -498,8 +525,21 @@
                         {% endif %}
                     </a>
                 </h2>
-                <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+                <form>
+                    <div class="form-group">
+                      <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                      <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="date">Due Date</label>
+                      <input type="date" class="form-control" id="date">
+                    </div>
+                </form>
+                <div>
+                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                </div>
             </div>
             <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
                 {% for list_item in latest_list_items %}
@@ -693,7 +733,7 @@ function newElement(list_id, saved_to_database = true) {
     {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
     var inputBox = document.getElementById("InputText_" + list_id.toString());
     var inputValue = inputBox.value;
-    var unorderedList = inputBox.parentElement.nextElementSibling
+    // var unorderedList = inputBox.parentElement.nextElementSibling
 
     {#var list_html_tag_id =  #}
 
@@ -701,9 +741,9 @@ function newElement(list_id, saved_to_database = true) {
     if (inputValue === '') {
         alert("You must write something!");
     }
-    else {
-        unorderedList.appendChild(li);
-    }
+    // else {
+    //     unorderedList.appendChild(li);
+    // }
     inputBox.value = "";
 
     // Saved to database if saved_to_database is true
@@ -750,6 +790,7 @@ function newElement(list_id, saved_to_database = true) {
         }
         httpRequest.send(JSON.stringify(params))
     }
+    window.location.reload();
     {#else {#}
     {#    return#}
     {#}#}
