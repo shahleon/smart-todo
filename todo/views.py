@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
-from todo.models import List, ListItem, Template, TemplateItem
+from todo.models import List, ListItem, Template, TemplateItem, ListTags
 
 from todo.forms import NewUserForm
 from django.conf import settings
@@ -35,10 +35,13 @@ def index(request, list_id=0):
         latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
+    list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
+    print(list_tags)
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
-        'templates': saved_templates
+        'templates': saved_templates,
+        'list_tags': list_tags
     }
     return render(request, 'todo/index.html', context)
 
@@ -222,6 +225,25 @@ def markListItem(request):
     else:
         return HttpResponse("Request method is not a Post")
 
+# Get all the list tags by user id
+@csrf_exempt
+def getListTagsByUserid(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        try:
+            with transaction.atomic():
+                user_id = request.user.id
+                list_tag_list = ListTags.objects.filter(user_id=user_id)
+                return JsonResponse({'list_tag_list': list_tag_list})
+        except IntegrityError:
+            print("query list tag by user_id = " + str(user_id) + " failed!")
+            JsonResponse({})
+    else:
+        return JsonResponse({'result': 'get'})  # Sending an success response
 
 # Get a to-do list item by name, called by javascript function
 @csrf_exempt
@@ -292,6 +314,7 @@ def createNewTodoList(request):
         body = json.loads(body_unicode)
         list_name = body['list_name']
         create_on = body['create_on']
+        tag_name = body['list_tag']
         create_on_time = datetime.datetime.fromtimestamp(create_on)
         # print(list_name)
         # print(create_on)
@@ -300,7 +323,12 @@ def createNewTodoList(request):
             with transaction.atomic():
                 user_id = request.user.id
                 print(user_id)
-                todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time)
+                todo_list = List(user_id_id=user_id, title_text=list_name, created_on=create_on_time, updated_on=create_on_time, list_tag=tag_name)
+                if body['create_new_tag']:
+                    print('new tag')
+                    new_tag = ListTags(user_id_id=user_id, tag_name=tag_name, created_on=create_on_time)
+                    new_tag.save()
+
                 todo_list.save()
         except IntegrityError as e:
             print(str(e))

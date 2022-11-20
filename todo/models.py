@@ -5,12 +5,23 @@ class List(models.Model):
     title_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
     updated_on = models.DateTimeField()
+    list_tag = models.CharField(max_length=50, default='none')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     objects = models.Manager()
 
     def __str__(self):
         return "%s" % self.title_text
+
+class ListTags(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    tag_name = models.CharField(max_length=50, null=True, blank=True)
+    created_on = models.DateTimeField()
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return "%s" % self.tag_name
 
 
 class ListItem(models.Model):
