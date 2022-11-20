@@ -316,6 +316,9 @@
                             <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                     {% endif %}
                             <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                            <br>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
+                            <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                             <span class="close">x</span>
                         </li>
                 {% endif %}
