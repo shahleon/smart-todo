@@ -489,8 +489,11 @@
                     {% else %}
                             <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                     {% endif %}
-                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">{{ list_item.item_name }}</label>
-                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                            <br>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}</label>
+                            <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                             <span class="close">x</span>
                         </li>
                 {% endif %}
@@ -555,8 +558,11 @@
                         {% else %}
                                 <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                         {% endif %}
-                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">{{ list_item.item_name }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                <br>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" class="text-right">Start date: {{ list_item.created_on }}</label>
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
+                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                                 <span class="close">x</span>
                             </li>
                     {% endif %}
@@ -708,13 +714,16 @@ function markListItemByName() {
         var list_item_id = this.id.toString().substring(9)
         var httpRequest = new XMLHttpRequest()
         var is_done = this.parentElement.classList.contains('done')
+        var today = new Date()
+        var finish_on_timestamp = today.getTime() / 1000
         httpRequest.open('POST', '/markListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": item_name,
             "is_done": is_done,
-            "list_item_id": list_item_id
+            "list_item_id": list_item_id,
+            "finish_on": finish_on_timestamp,
         }
         httpRequest.send(JSON.stringify(params))
     }
@@ -785,7 +794,6 @@ function newElement(list_id, saved_to_database = true) {
                 li.appendChild(span);
             }
         };
-
         httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
