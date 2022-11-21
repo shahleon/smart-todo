@@ -33,6 +33,7 @@ class ListItem(models.Model):
     is_done = models.BooleanField(default=False)
     created_on = models.DateTimeField()
     list = models.ForeignKey(List, on_delete=models.CASCADE)
+    due_date = models.DateField()
 
     objects = models.Manager()
 

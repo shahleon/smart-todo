@@ -468,8 +468,8 @@
                   <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
                 </div>
                 <div class="form-group">
-                  <label for="date">Due Date</label>
-                  <input type="date" class="form-control" id="date">
+                  <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                  <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                 </div>
             </form>
             <div>
@@ -489,7 +489,8 @@
                     {% else %}
                             <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                     {% endif %}
-                            <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">{{ list_item.item_name }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
                             <span class="close">x</span>
                         </li>
                 {% endif %}
@@ -554,7 +555,8 @@
                         {% else %}
                                 <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                         {% endif %}
-                                <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">{{ list_item.item_name }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
                                 <span class="close">x</span>
                             </li>
                     {% endif %}
@@ -755,7 +757,6 @@ function newElement(list_id, saved_to_database = true) {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
         var create_on_timestamp = today.getTime() / 1000
-
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
@@ -790,11 +791,12 @@ function newElement(list_id, saved_to_database = true) {
         var params = {
             "list_id": list_id,
             "list_item_name": inputValue,
-            "create_on": create_on_timestamp
+            "create_on": create_on_timestamp,
+            "due_date": inputDue
         }
         httpRequest.send(JSON.stringify(params))
     }
-    // window.location.reload();
+    window.location.reload();
     {#else {#}
     {#    return#}
     {#}#}
