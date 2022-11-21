@@ -450,7 +450,9 @@
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
                                 <br>
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
-                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                                {% if list_item.is_done == 1%}
+                                    <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                                {% endif %}
                                 <span class="close">x</span>
                             </li>
                     {% endif %}
