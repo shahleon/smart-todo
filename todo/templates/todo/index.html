@@ -493,7 +493,9 @@
                             <br>
                             <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
                             <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}</label>
-                            <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                            {% if list_item.is_done == 1%}
+                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                            {% endif %}
                             <span class="close">x</span>
                         </li>
                 {% endif %}
@@ -562,7 +564,9 @@
                                 <br>
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}" class="text-right">Start date: {{ list_item.created_on }}</label>
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
-                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                                {% if list_item.is_done == 1%}
+                                    <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                                {% endif %}
                                 <span class="close">x</span>
                             </li>
                     {% endif %}
@@ -723,7 +727,7 @@ function markListItemByName() {
             "list_item_name": item_name,
             "is_done": is_done,
             "list_item_id": list_item_id,
-            "finish_on": finish_on_timestamp,
+            "finish_on": finish_on_timestamp
         }
         httpRequest.send(JSON.stringify(params))
     }
