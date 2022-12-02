@@ -62,11 +62,7 @@ def index(request, list_id=0):
     cur_date = datetime.date.today()
     for list_item in latest_list_items:       
         list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
-    
-    # latest_lists.append(shared_list)
-    # print(latest_lists[0].updated_on)
-    # quickSort(latest_lists, 0, len(latest_lists) - 1)
-        
+            
     context = {
         'latest_lists': latest_lists,
         'latest_list_items': latest_list_items,
@@ -75,31 +71,6 @@ def index(request, list_id=0):
         'shared_list': shared_list,
     }
     return render(request, 'todo/index.html', context)
-
-
-# def partition(arr, low, high):
-
-#     pivot = arr[high].updated_on
-#     i = low - 1
-
-#     for j in range(low, high):
-#         if arr[j].updated_on <= pivot:
-#             i = i + 1
-#             (arr[i], arr[j]) = (arr[j], arr[i])
-
-#     (arr[i + 1], arr[high]) = (arr[high], arr[i + 1])
-
-#     return i + 1
-
-# def quickSort(arr, low, high):
-
-#     print(arr[0].updated_on)
-#     if low < high:
-#         pi = partition(arr, low, high)
-#         quickSort(arr, low, pi - 1)
-#         quickSort(arr, pi + 1, high)
-
-
 
 # Create a new to-do list from templates and redirect to the to-do list homepage
 def todo_from_template(request):
