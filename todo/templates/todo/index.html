@@ -293,7 +293,8 @@
 
         /* Style the header */
         .main .header {
-          color: white;
+          /* color: white; */
+          color: black;
           display: block;
         }
 
@@ -310,7 +311,20 @@
           border-radius: 10px;
           width: 75%;
           padding: 10px;
-          float: left;
+          /* float: left; */
+          font-size: 16px;
+          box-shadow: 1px 1px 5px #555 inset;
+          white-space: nowrap;
+          display: block;
+        }
+
+        /* Style the input date*/
+        .main input[type=date] {
+          border: none;
+          border-radius: 10px;
+          width: 75%;
+          padding: 10px;
+          /* float: left; */
           font-size: 16px;
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
@@ -446,8 +460,21 @@
                 </a>
 
             </h2>
-            <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-            <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+            <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+            <form>
+                <div class="form-group">
+                  <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                  <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                </div>
+                <div class="form-group">
+                  <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                  <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                </div>
+            </form>
+            <div>
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            </div>
         </div>
         <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
             {% for list_item in latest_list_items %}
@@ -463,6 +490,10 @@
                             <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                     {% endif %}
                             <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                            <br>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}</label>
+                            <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                             <span class="close">x</span>
                         </li>
                 {% endif %}
@@ -498,8 +529,21 @@
                         {% endif %}
                     </a>
                 </h2>
-                <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+                <form>
+                    <div class="form-group">
+                      <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                      <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                      <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                    </div>
+                </form>
+                <div>
+                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                </div>
             </div>
             <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
                 {% for list_item in latest_list_items %}
@@ -515,6 +559,10 @@
                                 <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
                         {% endif %}
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                                <br>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" class="text-right">Start date: {{ list_item.created_on }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
+                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                                 <span class="close">x</span>
                             </li>
                     {% endif %}
@@ -666,13 +714,16 @@ function markListItemByName() {
         var list_item_id = this.id.toString().substring(9)
         var httpRequest = new XMLHttpRequest()
         var is_done = this.parentElement.classList.contains('done')
+        var today = new Date()
+        var finish_on_timestamp = today.getTime() / 1000
         httpRequest.open('POST', '/markListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": item_name,
             "is_done": is_done,
-            "list_item_id": list_item_id
+            "list_item_id": list_item_id,
+            "finish_on": finish_on_timestamp,
         }
         httpRequest.send(JSON.stringify(params))
     }
@@ -693,7 +744,8 @@ function newElement(list_id, saved_to_database = true) {
     {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
     var inputBox = document.getElementById("InputText_" + list_id.toString());
     var inputValue = inputBox.value;
-    var unorderedList = inputBox.parentElement.nextElementSibling
+    var inputDue = document.getElementById("InputDue_" + list_id.toString()).value;
+    // var unorderedList = inputBox.parentElement.nextElementSibling
 
     {#var list_html_tag_id =  #}
 
@@ -701,9 +753,12 @@ function newElement(list_id, saved_to_database = true) {
     if (inputValue === '') {
         alert("You must write something!");
     }
-    else {
-        unorderedList.appendChild(li);
+    else if (inputDue === '') {
+        alert("You must enter due date!")
     }
+    // else {
+    //     unorderedList.appendChild(li);
+    // }
     inputBox.value = "";
 
     // Saved to database if saved_to_database is true
@@ -711,7 +766,6 @@ function newElement(list_id, saved_to_database = true) {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
         var create_on_timestamp = today.getTime() / 1000
-
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
@@ -740,16 +794,17 @@ function newElement(list_id, saved_to_database = true) {
                 li.appendChild(span);
             }
         };
-
         httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": inputValue,
-            "create_on": create_on_timestamp
+            "create_on": create_on_timestamp,
+            "due_date": inputDue
         }
         httpRequest.send(JSON.stringify(params))
     }
+    window.location.reload();
     {#else {#}
     {#    return#}
     {#}#}

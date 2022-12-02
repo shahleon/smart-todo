@@ -54,11 +54,14 @@ def index(request, list_id=0):
             if query_list:
                 shared_list.append(query_list)
         
-    
-
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
     list_tags = ListTags.objects.filter(user_id=request.user.id).order_by('created_on')
+    
+    # change color when is or over due
+    cur_date = datetime.date.today()
+    for list_item in latest_list_items:       
+        list_item.color = "#FF0000" if cur_date > list_item.due_date else "#000000"
     
     # latest_lists.append(shared_list)
     # print(latest_lists[0].updated_on)
@@ -115,6 +118,8 @@ def todo_from_template(request):
             item_name=template_item.item_text,
             item_text="",
             created_on=timezone.now(),
+            finished_on=timezone.now(),
+            due_date=timezone.now(),
             list=todo,
             is_done=False,
         )
@@ -138,6 +143,8 @@ def template_from_todo(request):
         TemplateItem.objects.create(
             item_text=todo_item.item_name,
             created_on=timezone.now(),
+            finished_on=timezone.now(),
+            due_date=timezone.now(),
             template=new_template
         )
     return redirect("/templates")
@@ -226,13 +233,15 @@ def addNewListItem(request):
         item_name = body['list_item_name']
         create_on = body['create_on']
         create_on_time = datetime.datetime.fromtimestamp(create_on)
+        finished_on_time = datetime.datetime.fromtimestamp(create_on)
+        due_date = body['due_date']
         print(item_name)
         print(create_on)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, list_id=list_id, item_text="", is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date, list_id=list_id, item_text="", is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -260,6 +269,8 @@ def markListItem(request):
         # remove the first " and last "
         list_item_is_done = True
         is_done_str = str(body['is_done'])
+        finish_on = body['finish_on']
+        finished_on_time = datetime.datetime.fromtimestamp(finish_on)
         print("is_done: " + str(body['is_done']))
         if is_done_str == "0" or is_done_str == "False" or is_done_str == "false":
             list_item_is_done = False
@@ -268,6 +279,7 @@ def markListItem(request):
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(id=list_item_id)
                 query_item.is_done = list_item_is_done
+                query_item.finished_on = finished_on_time
                 query_item.save()
                 # Sending an success response
                 return JsonResponse({'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})

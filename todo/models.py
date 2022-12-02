@@ -33,6 +33,8 @@ class ListItem(models.Model):
     is_done = models.BooleanField(default=False)
     created_on = models.DateTimeField()
     list = models.ForeignKey(List, on_delete=models.CASCADE)
+    finished_on = models.DateTimeField()
+    due_date = models.DateField()
 
     objects = models.Manager()
 
@@ -56,7 +58,9 @@ class TemplateItem(models.Model):
     item_text = models.CharField(max_length=100)
     created_on = models.DateTimeField()
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
-
+    finished_on = models.DateTimeField()
+    due_date = models.DateField()
+    
     objects = models.Manager()
 
     def __str__(self):
