@@ -83,6 +83,7 @@
           border-radius: 10px;
           width: 200px;
           margin-left: 10px;
+          margin-top: 5px;
           padding: 10px;
           float: left;
           font-size: 16px;
@@ -102,7 +103,7 @@
         #listTags {
           border:none;
           border-radius: 10px;
-          width: 175px;
+          /* width: 175px; */
           margin-left: 10px;
           padding: 10px;
           float: left;
@@ -130,13 +131,14 @@
           width: 17%;
           background: #d9d9d9;
           color: #555;
-          float: left;
+          float: right;
+          margin-top: 5px;
           text-align: center;
           font-size: 16px;
           cursor: pointer;
           transition: 0.3s;
           border-radius: 10px;
-          display: inline-block;
+          display: block;
         }
 
         .sidenav .addTodoList:hover {
@@ -291,7 +293,8 @@
 
         /* Style the header */
         .main .header {
-          color: white;
+          /* color: white; */
+          color: black;
           display: block;
         }
 
@@ -308,7 +311,20 @@
           border-radius: 10px;
           width: 75%;
           padding: 10px;
-          float: left;
+          /* float: left; */
+          font-size: 16px;
+          box-shadow: 1px 1px 5px #555 inset;
+          white-space: nowrap;
+          display: block;
+        }
+
+        /* Style the input date*/
+        .main input[type=date] {
+          border: none;
+          border-radius: 10px;
+          width: 75%;
+          padding: 10px;
+          /* float: left; */
           font-size: 16px;
           box-shadow: 1px 1px 5px #555 inset;
           white-space: nowrap;
@@ -332,13 +348,13 @@
           width: 25%;
           background: #d9d9d9;
           color: #555;
-          float: left;
+          float:left;
           text-align: center;
           font-size: 16px;
           cursor: pointer;
           transition: 0.3s;
           border-radius: 10px;
-          display: inline-block
+          display: block;
         }
 
         .main .addBtn:hover {
@@ -383,6 +399,14 @@
         .add-template-button.delete:hover{
             background: #a81a0f;
         }
+
+        .shared-list {
+            color: black;
+            font-size: 12px;
+            margin-top: 5px;
+            padding-left: 5px;
+        }
+
     </style>
     <meta charset="UTF-8">
     <title>To-Done</title>
@@ -415,10 +439,82 @@
             <option value="new">--create new tag--</option>
         </select>
         <input type="hidden" id="newListTag" placeholder="New List tag">
+        <input type="text" id="sharedUser" placeholder="Share this list with...">
         <span onclick="newTodoList()" class="addTodoList">Add</span>
     </div>
 
     <div class="main">
+
+        {% for list in shared_list %}
+        <div class="header">
+            <h2>
+                <a href="/todo/{{ list.id }}">{{ list.title_text }} {% if list.list_tag != "none" %}
+                    <button type="button" class="tag-template">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag-fill" viewBox="0 0 16 16">
+                            <path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                          </svg>
+                        {{ list.list_tag }}
+                    </button>
+                    {% endif %}
+                    <img src="https://cdn0.iconfinder.com/data/icons/multimedia-261/32/Send-512.png" title="This To-Do list is shared by {{ list.user_id }}" height="16px" width="16px">
+                </a>
+
+            </h2>
+            <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+            <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+            <form>
+                <div class="form-group">
+                  <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                  <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                </div>
+                <div class="form-group">
+                  <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                  <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                </div>
+            </form>
+            <div>
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+            </div>
+        </div>
+        <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
+            {% for list_item in latest_list_items %}
+                {% if list_item.list_id == list.id %}
+                    {% if not list_item.is_done %}
+                        <li class="listItem">
+                    {% else %}
+                        <li class="listItem done">
+                    {% endif %}
+                    {% if not list_item.is_done %}
+                            <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}">
+                    {% else %}
+                            <input type="checkbox" id="{{ "ListItem_"|addstr:list_item.id }}" name="{{ "ListItem_"|addstr:list_item.id }}" value="{{ "ListItem_"|addstr:list_item.id }}" checked>
+                    {% endif %}
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
+                            <br>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
+                            <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due date: {{ list_item.due_date }}</label>
+                            {% if list_item.is_done == 1%}
+                                <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
+                            {% endif %}
+                            <span class="close">x</span>
+                        </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    <form action="/templates/new-from-todo" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="todo" id="todo-{{ list.id }}" value="{{ list.id }}">
+        <button class="add-template-button" onclick="">Save As Template</button>
+    </form>
+    <form action="/delete-todo" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="todo" id="delete-todo-{{ list.id }}" value="{{ list.id }}">
+        <button class="add-template-button delete" onclick="">Delete</button>
+    </form>
+
+    {% endfor %}
+
+
         {% for list in latest_lists %}
             <div class="header">
                 <h2>
@@ -429,10 +525,27 @@
                               </svg>
                             {{ list.list_tag }}
                         </button>
-                        {% endif %}</a>
+                        {% endif %}
+                        {% if list.is_shared == True %}
+                            <img src="https://cdn0.iconfinder.com/data/icons/multimedia-261/32/Send-512.png" title="This To-Do list is shared by you." height="16px" width="16px">
+                        {% endif %}
+                    </a>
                 </h2>
-                <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
-                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                <!-- <input type="text" id="{{ "InputText_"|addstr:list.id }}" placeholder="New Task">
+                <span onclick="newElement({{ list.id }})" class="addBtn">Add</span> -->
+                <form>
+                    <div class="form-group">
+                      <label for="{{ "InputText_"|addstr:list.id }}">New Task</label>
+                      <input type="text" class="form-control" id="{{ "InputText_"|addstr:list.id }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
+                      <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
+                    </div>
+                </form>
+                <div>
+                    <span onclick="newElement({{ list.id }})" class="addBtn">Add</span>
+                </div>
             </div>
             <ul id="{{ "List_"|addstr:list.id }}" class="listItemsUnorderedList">
                 {% for list_item in latest_list_items %}
@@ -449,7 +562,8 @@
                         {% endif %}
                                 <label for="{{ "ListItem_"|addstr:list_item.id }}">{{ list_item.item_name }}</label>
                                 <br>
-                                <label for="{{ "ListItem_"|addstr:list_item.id }}" class = "text-right">Start date: {{ list_item.created_on }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" class="text-right">Start date: {{ list_item.created_on }}</label>
+                                <label for="{{ "ListItem_"|addstr:list_item.id }}" style="color:{{list_item.color}};">Due: {{list_item.due_date}}</label>
                                 {% if list_item.is_done == 1%}
                                     <p> It took you: {{ list_item.finished_on|timeuntil:list_item.created_on }} to complete</p>
                                 {% endif %}
@@ -468,14 +582,17 @@
             <input type="hidden" name="todo" id="delete-todo-{{ list.id }}" value="{{ list.id }}">
             <button class="add-template-button delete" onclick="">Delete</button>
         </form>
-        {% empty %}
+        {% endfor %}  
+        {% if not latest_lists %}
+            {% if not shared_list %}
         <div class="header">
             <h2 id="noListYet">You don't hava any todo list!</h2>
         </div>
-        {% endfor %}  
+            {% endif %}
+        {% endif %}
     </div>
 
-    {% if latest_lists %}
+    {% if latest_lists or shared_list %}
         <ul class="rightsidebar" id = "rightsidebar">
             <li><a>List name</a></li>
             <li><a>Item name</a></li>
@@ -631,7 +748,8 @@ function newElement(list_id, saved_to_database = true) {
     {#var inputBox = document.getElementById(list_id).parentElement.getElementsByTagName("input")[0]#}
     var inputBox = document.getElementById("InputText_" + list_id.toString());
     var inputValue = inputBox.value;
-    var unorderedList = inputBox.parentElement.nextElementSibling
+    var inputDue = document.getElementById("InputDue_" + list_id.toString()).value;
+    // var unorderedList = inputBox.parentElement.nextElementSibling
 
     {#var list_html_tag_id =  #}
 
@@ -639,9 +757,12 @@ function newElement(list_id, saved_to_database = true) {
     if (inputValue === '') {
         alert("You must write something!");
     }
-    else {
-        unorderedList.appendChild(li);
+    else if (inputDue === '') {
+        alert("You must enter due date!")
     }
+    // else {
+    //     unorderedList.appendChild(li);
+    // }
     inputBox.value = "";
 
     // Saved to database if saved_to_database is true
@@ -649,7 +770,6 @@ function newElement(list_id, saved_to_database = true) {
         var httpRequest = new XMLHttpRequest()
         var today = new Date()
         var create_on_timestamp = today.getTime() / 1000
-
         httpRequest.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
                 // get the newly created item's id and set it as the id of the html tag
@@ -678,16 +798,17 @@ function newElement(list_id, saved_to_database = true) {
                 li.appendChild(span);
             }
         };
-
         httpRequest.open('POST', '/addNewListItem');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
         var params = {
             "list_id": list_id,
             "list_item_name": inputValue,
-            "create_on": create_on_timestamp
+            "create_on": create_on_timestamp,
+            "due_date": inputDue
         }
         httpRequest.send(JSON.stringify(params))
     }
+    window.location.reload();
     {#else {#}
     {#    return#}
     {#}#}
@@ -704,6 +825,8 @@ function newTodoList() {
     var selectedTag = document.getElementById("listTags").value;
     var listTag = selectedTag;
     var create_new_tag = false;
+    var sharedUser = document.getElementById("sharedUser").value;
+
     if(selectedTag==='new'){
         listTag = document.getElementById("newListTag").value;
         create_new_tag = true;
@@ -726,19 +849,29 @@ function newTodoList() {
         var create_on_timestamp = today.getTime() / 1000
         // TODO Save new todo list to database
         var httpRequest = new XMLHttpRequest()
-        {#httpRequest.onreadystatechange = alertContents;#}
+        // {#httpRequest.onreadystatechange = alertContents;#}
         httpRequest.open('POST', '/createNewTodoList');
         httpRequest.setRequestHeader('Content-Type', "application/json;charset=UTF-8")
-        {#var token = {% csrf_token %}#}
+        // {#var token = {% csrf_token %}#}
         var params = {
             "list_name": inputValue,
             "create_on": create_on_timestamp,
             "list_tag": listTag,
-            "create_new_tag": create_new_tag
+            "create_new_tag": create_new_tag,
+            "shared_user": sharedUser,
+        }
+
+        // httpRequest.responseType = 'text';
+
+        if (httpRequest.readyState === httpRequest.DONE){
+            if (httpRequest.status == 200) {
+                console.log("The request has been made");
+            }
         }
 
         httpRequest.send(JSON.stringify(params))
-        window.location.reload();
+
+        // window.location.reload();
     }
 }
 
