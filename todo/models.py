@@ -36,6 +36,7 @@ class ListItem(models.Model):
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     finished_on = models.DateTimeField()
     due_date = models.DateField()
+    tag_color = models.CharField(max_length=10)
 
     objects = models.Manager()
 
@@ -61,6 +62,7 @@ class TemplateItem(models.Model):
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     finished_on = models.DateTimeField()
     due_date = models.DateField()
+    tag_color = models.CharField(max_length=10)
 
     objects = models.Manager()
 
