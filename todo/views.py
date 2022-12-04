@@ -91,6 +91,7 @@ def todo_from_template(request):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             due_date=timezone.now(),
+	    tag_color=template_item.tag_color,
             list=todo,
             is_done=False,
         )
@@ -116,6 +117,7 @@ def template_from_todo(request):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             due_date=timezone.now(),
+	    tag_color = todo_item.tag_color,
             template=new_template
         )
     return redirect("/templates")
@@ -206,13 +208,14 @@ def addNewListItem(request):
         create_on_time = datetime.datetime.fromtimestamp(create_on)
         finished_on_time = datetime.datetime.fromtimestamp(create_on)
         due_date = body['due_date']
+	tag_color = body['tag_color']
         print(item_name)
         print(create_on)
         result_item_id = -1
         # create a new to-do list object and save it to the database
         try:
             with transaction.atomic():
-                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date, list_id=list_id, item_text="", is_done=False)
+                todo_list_item = ListItem(item_name=item_name, created_on=create_on_time, finished_on=finished_on_time, due_date=due_date, tag_color=tag_color, list_id=list_id, item_text="", is_done=False)
                 todo_list_item.save()
                 result_item_id = todo_list_item.id
         except IntegrityError:
@@ -320,19 +323,23 @@ def getListItemById(request):
         list_id = body['list_id']
         list_item_name = body['list_item_name']
         list_item_id = body['list_item_id']
+	list_due_date = body['due_date']
+        list_tag_color = body['tag_color']
         # remove the first " and last "
         # list_item_name = list_item_name
 
         print("list_id: " + list_id)
         print("list_item_name: " + list_item_name)
         print("list_item_id: " + list_item_id)
+	print("list_due_date: " + list_due_date)
+        print("list_tag_color: " + list_tag_color)
         try:
             with transaction.atomic():
                 query_list = List.objects.get(id=list_id)
                 query_item = ListItem.objects.get(id=list_item_id)
                 print("item_text", query_item.item_text)
                 # Sending an success response
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
+                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text, 'due_date': query_item.due_date, 'tag_color': query_item.tag_color})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
