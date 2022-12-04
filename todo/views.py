@@ -91,12 +91,11 @@ def todo_from_template(request):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             due_date=timezone.now(),
-	    tag_color=template_item.tag_color,
+            tag_color=template_item.tag_color,
             list=todo,
             is_done=False,
         )
     return redirect("/todo")
-
 
 
 # Create a new Template from existing to-do list and redirect to the templates list page
@@ -117,7 +116,7 @@ def template_from_todo(request):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             due_date=timezone.now(),
-	    tag_color = todo_item.tag_color,
+            tag_color = todo_item.tag_color,
             template=new_template
         )
     return redirect("/templates")
@@ -208,7 +207,7 @@ def addNewListItem(request):
         create_on_time = datetime.datetime.fromtimestamp(create_on)
         finished_on_time = datetime.datetime.fromtimestamp(create_on)
         due_date = body['due_date']
-	tag_color = body['tag_color']
+        tag_color = body['tag_color']
         print(item_name)
         print(create_on)
         result_item_id = -1
@@ -323,16 +322,15 @@ def getListItemById(request):
         list_id = body['list_id']
         list_item_name = body['list_item_name']
         list_item_id = body['list_item_id']
-	list_due_date = body['due_date']
+        list_due_date = body['due_date']
         list_tag_color = body['tag_color']
-        # remove the first " and last "
-        # list_item_name = list_item_name
 
         print("list_id: " + list_id)
         print("list_item_name: " + list_item_name)
         print("list_item_id: " + list_item_id)
-	print("list_due_date: " + list_due_date)
+        print("list_due_date: " + list_due_date)
         print("list_tag_color: " + list_tag_color)
+
         try:
             with transaction.atomic():
                 query_list = List.objects.get(id=list_id)
