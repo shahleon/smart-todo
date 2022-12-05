@@ -112,7 +112,7 @@ We wanted to work on something that is:
 ### Want to Contribute?
 
 Want to contribute to this project? Learn about [Contributing](CONTRIBUTING.md). Not sure where to start? Have a look at 
-the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Found a bug or have a new feature idea? Create an [Issue](https://github.com/shahleon/smart-todo/issues/new) or shoot a mail to [us](#developers)
+the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Found a bug or have a new feature idea? Create an [Issue](https://github.com/Chole-Ku/smart-todo/issues/new) or shoot a mail to [us](#developers)
 
 ### License
 
