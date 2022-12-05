@@ -41,21 +41,25 @@ We wanted to work on something that is:
 
 `to-done` is a todo list app that is actually useful, very easy to create a basic working version with where a ton of new features can be added, touches upon all the aspects of web programming, database, working in a team etc.
 
-### Key Features
+### Key Features (Last Version)
  * [Register](#register)
  * [Login](#login-forget-password)
  * [Create, Update, Delete Todo Lists](#manage-todo-list)
  * [Quickly Create Todo Lists From Existing Templates](#templates)
  * [Create Your Own Templates](#templates)
 
+### New Features
+* [Shared List]
+* [Add Due Date To Tasks]
+* [Due Date Alerting Mechanism]
+* [Add Reminder Message to completed]
+* [Customized Color Tag]
+* [Add Tags To Todo Lists For Customizable Grouping]
+
 ### Upcoming Features
  * Social login
- * Color code to-do items based on priority, due date
- * Shared lists among multiple users
- * Context based task reminder
  * Export and import to-do lists
  * Gamification - earn points by finishing your tasks, show-off your productivity in social media
- * Add tags to to-do lists for customizable grouping, easier search
  * [List of All Planned Features for Second Phase](https://github.com/users/shahleon/projects/2/views/6)
 
 ### Quick Start
