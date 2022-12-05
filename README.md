@@ -108,6 +108,8 @@ We wanted to work on something that is:
     <img src="img/todone-templates.gif" width="500" height="250" />
 </p>
 
+### New Features
+
 ### Want to Contribute?
 
 Want to contribute to this project? Learn about [Contributing](CONTRIBUTING.md). Not sure where to start? Have a look at 
