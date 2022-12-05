@@ -41,6 +41,9 @@ class TestViews(TestCase):
             item_name="test item",
             item_text="This is a test item on a test list",
             created_on=timezone.now(),
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date==timezone.now(),
             list=todo,
             is_done=False,
         )
@@ -74,6 +77,9 @@ class TestViews(TestCase):
             item_name="test item",
             item_text="This is a test item on a test list",
             created_on=timezone.now(),
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date==timezone.now(),
             list=todo,
             is_done=False,
         )
