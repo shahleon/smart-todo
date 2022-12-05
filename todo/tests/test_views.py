@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from todo.views import login_request, template_from_todo, template, delete_todo, index
+from todo.views import login_request, template_from_todo, template, delete_todo, index, getListTagsByUserid
 from django.utils import timezone
 from todo.models import List, ListItem, Template, TemplateItem
 
@@ -53,6 +53,15 @@ class TestViews(TestCase):
         request.POST = post
         response = delete_todo(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_getListTagsByUserid(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        post = request.POST.copy()
+        post['todo'] = 1
+        request.POST = post
+        response = getListTagsByUserid(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_index(self):
         request = self.factory.get('/todo/')
