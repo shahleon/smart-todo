@@ -331,7 +331,7 @@
           display: block;
         }
 	
-	/* Style the input color*/
+	    /* Style the input color*/
         .main input[type=color] {
           display: block;
           margin-bottom: 5px;
@@ -384,7 +384,7 @@
             color: #f9f9f9;
         }
 	
-	 /* Style the "customize" button */
+	     /* Style the "customize" button */
         .main .add-cust-color-button{
             position: absolute;
             right: 50px;
@@ -502,7 +502,7 @@
                   <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
                   <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                 </div>
-		<div class="form-group">
+		        <div class="form-group">
                     <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
                     <input type="color" class="form-control" id="{{ "InputColor_"|addstr:list.id }}" value="#f9f9f9">
                 </div>
@@ -577,7 +577,7 @@
                       <label for="{{ "InputDue_"|addstr:list.id }}">Due Date</label>
                       <input type="date" class="form-control" id="{{ "InputDue_"|addstr:list.id }}">
                     </div>
-		    <div class="form-group">
+		            <div class="form-group">
                         <label for="{{ "InputColor_"|addstr:list.id }}">Color Tag</label>
                         <input type="color" class="form-control" id="{{ "InputColor_"|addstr:list.id }}" value="#f9f9f9">
                     </div>
@@ -845,7 +845,7 @@ function newElement(list_id, saved_to_database = true) {
             "list_item_name": inputValue,
             "create_on": create_on_timestamp,
             "due_date": inputDue,
-	    "tag_color": inputColor
+	        "tag_color": inputColor
         }
         httpRequest.send(JSON.stringify(params))
     }
