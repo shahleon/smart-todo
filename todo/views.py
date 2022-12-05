@@ -322,14 +322,10 @@ def getListItemById(request):
         list_id = body['list_id']
         list_item_name = body['list_item_name']
         list_item_id = body['list_item_id']
-        list_due_date = body['due_date']
-        list_tag_color = body['tag_color']
 
         print("list_id: " + list_id)
         print("list_item_name: " + list_item_name)
         print("list_item_id: " + list_item_id)
-        print("list_due_date: " + list_due_date)
-        print("list_tag_color: " + list_tag_color)
 
         try:
             with transaction.atomic():
@@ -337,7 +333,7 @@ def getListItemById(request):
                 query_item = ListItem.objects.get(id=list_item_id)
                 print("item_text", query_item.item_text)
                 # Sending an success response
-                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text, 'due_date': query_item.due_date, 'tag_color': query_item.tag_color})
+                return JsonResponse({'item_id': query_item.id, 'item_name': query_item.item_name, 'list_name': query_list.title_text, 'item_text': query_item.item_text})
         except IntegrityError:
             print("query list item" + str(list_item_name) + " failed!")
             JsonResponse({})
