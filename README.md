@@ -5,7 +5,7 @@
 
 [![Build Status](https://img.shields.io/github/workflow/status/shahleon/smart-todo/Django%20CI/main)](https://github.com/shahleon/smart-todo/actions/workflows/django.yml)
 [![Coverage Status](https://coveralls.io/repos/github/shahleon/smart-todo/badge.svg?branch=main)](https://coveralls.io/github/shahleon/smart-todo?branch=main)
-[![license badge](https://img.shields.io/github/license/shahleon/cs510-homework-1)](https://github.com/shahleon/smart-todo/blob/main/LICENSE)
+[![license badge](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/Chloe-Ku/smart-todo/blob/main/LICENSE)
 [![issues badge](https://img.shields.io/github/issues/shahleon/smart-todo)](https://github.com/shahleon/smart-todo/issues)
 [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Django 4.1](https://img.shields.io/badge/django-4.1-blue.svg)](https://docs.djangoproject.com/en/4.1/releases/4.1/)
@@ -112,7 +112,7 @@ We wanted to work on something that is:
 ### Want to Contribute?
 
 Want to contribute to this project? Learn about [Contributing](CONTRIBUTING.md). Not sure where to start? Have a look at 
-the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Found a bug or have a new feature idea? Please create an [issue](https://github.com/Chloe-Ku/smart-todo/issues/new) to notify us.
+the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Found a bug or have a new feature idea? Please create an [Issue](https://github.com/Chloe-Ku/smart-todo/issues) to notify us.
 
 ### License
 
