@@ -71,7 +71,9 @@ class TestViews(TestCase):
             title_text="test list",
             created_on=timezone.now(),
             updated_on=timezone.now(),
-            user_id_id=request.user.id
+            user_id_id=request.user.id,
+            shared_user="",
+            is_shared=False
         )
         item = ListItem.objects.create(
             item_name="test item",
