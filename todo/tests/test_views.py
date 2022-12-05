@@ -43,7 +43,7 @@ class TestViews(TestCase):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             tag_color="#f9f9f9",
-            due_date==timezone.now(),
+            due_date=timezone.now(),
             list=todo,
             is_done=False,
         )
@@ -79,7 +79,7 @@ class TestViews(TestCase):
             created_on=timezone.now(),
             finished_on=timezone.now(),
             tag_color="#f9f9f9",
-            due_date==timezone.now(),
+            due_date=timezone.now(),
             list=todo,
             is_done=False,
         )
