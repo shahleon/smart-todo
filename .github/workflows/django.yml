@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        rm todo.dqlite3
+        rm todo.sqlite3
         python manage.py migrate
     - name: Run Tests
       run: |
