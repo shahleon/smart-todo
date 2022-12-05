@@ -38,21 +38,27 @@ def index(request, list_id=0):
 
     else:
         latest_lists = List.objects.filter(user_id_id=request.user.id).order_by('-updated_on')
-        query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
-        shared_list_id = query_list_str.split(" ")
-        shared_list_id.remove("")
 
-        latest_lists = list(latest_lists)
-
-        for list_id in shared_list_id:
+        try:
+            query_list_str = SharedList.objects.get(user_id=request.user.id).shared_list_id
+        except SharedList.DoesNotExist:
+            query_list_str = None
         
-            try:
-                query_list = List.objects.get(id=int(list_id))
-            except List.DoesNotExist:
-                query_list = None
+        if query_list_str != None:
+            shared_list_id = query_list_str.split(" ")
+            shared_list_id.remove("")
 
-            if query_list:
-                shared_list.append(query_list)
+            latest_lists = list(latest_lists)
+
+            for list_id in shared_list_id:
+            
+                try:
+                    query_list = List.objects.get(id=int(list_id))
+                except List.DoesNotExist:
+                    query_list = None
+
+                if query_list:
+                    shared_list.append(query_list)
         
     latest_list_items = ListItem.objects.order_by('list_id')
     saved_templates = Template.objects.filter(user_id_id=request.user.id).order_by('created_on')
@@ -419,7 +425,7 @@ def createNewTodoList(request):
             'user_not_found': user_not_found,
         }
         # return HttpResponse("Success!")
-        return redirect("index")
+        return redirect("/todo")
     else:
         return HttpResponse("Request method is not a Post")
 
