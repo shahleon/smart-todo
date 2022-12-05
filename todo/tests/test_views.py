@@ -49,6 +49,15 @@ class TestViews(TestCase):
         request.POST = post
         response = delete_todo(request)
         self.assertEqual(response.status_code, 302)
+        
+    def test_getListTagsByUserid(self):
+        request = self.factory.get('/todo/')
+        request.user = self.user
+        post = request.POST.copy()
+        post['todo'] = 1
+        request.POST = post
+        response = getListTagsByUserid(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_index(self):
         request = self.factory.get('/todo/')
