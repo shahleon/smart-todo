@@ -102,7 +102,10 @@ class TestViews(TestCase):
         template_item = TemplateItem.objects.create(
             item_text="test item",
             created_on=timezone.now(),
-            template=new_template
+            template=new_template,
+            finished_on=timezone.now(),
+            tag_color="#f9f9f9",
+            due_date=timezone.now()
         )
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
