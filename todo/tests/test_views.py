@@ -36,8 +36,8 @@ class TestViews(TestCase):
             created_on=timezone.now(),
             updated_on=timezone.now(),
             user_id_id=self.user.id,
-            list=todo,
-            is_done=False,
+            shared_user="",
+            is_shared=False
         )
         ListItem.objects.create(
             item_name="test item",
