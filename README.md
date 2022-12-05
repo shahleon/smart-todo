@@ -72,7 +72,6 @@ We wanted to work on something that is:
     ```
  * Run migrations
     ```bash
-    $ cd smarttodo
     $ python manage.py migrate
     ```
  * Start the app
