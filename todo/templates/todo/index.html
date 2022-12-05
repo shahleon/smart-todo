@@ -769,6 +769,7 @@ function markListItemByName() {
             "finish_on": finish_on_timestamp
         }
         httpRequest.send(JSON.stringify(params))
+        window.location.reload();
     }
 }
 
