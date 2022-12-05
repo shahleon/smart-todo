@@ -118,7 +118,19 @@ the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissu
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-### Developers
+### Developers (New Version)
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/juliachiu1"><img src="https://avatars.githubusercontent.com/u/112150278?v=4" width="100px;" alt=""/><br /><sub><b>Chiu, Ching-Lun</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Hsueh-YANG"><img src="https://avatars.githubusercontent.com/u/23623764?v=4" width="100px;" alt=""/><br /><sub><b>Yu, Hsueh-Yang</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/123standup"><img src="https://avatars.githubusercontent.com/u/59056739?v=4" width="100px;" alt=""/><br /><sub><b>Lin, Po-Hsun</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Chloe-Ku"><img src="https://avatars.githubusercontent.com/u/60029373?v=4" width="100px;" alt=""/><br /><sub><b>Ku, Li-Ling</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/jackson910210"><img src="https://avatars.githubusercontent.com/u/32348727?v=4" width="100px;" alt=""/><br /><sub><b>Chiang, Chen-Hsuan</b></sub></a><br /></td>
+  </tr>
+</table>
+
+### Developers (Last Version)
 
 * Shahnewaz Leon (sleon3@ncsu.edu)
 * Dong Li (dli35@ncsu.edu)
