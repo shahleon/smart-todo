@@ -19,6 +19,7 @@ class TestViews(TestCase):
         request.user = self.user
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
+        print(request)
         request.POST = post
         response = login_request(request)
         self.assertEqual(response.status_code, 200)
@@ -36,8 +37,6 @@ class TestViews(TestCase):
             created_on=timezone.now(),
             updated_on=timezone.now(),
             user_id_id=self.user.id,
-            shared_user="",
-            is_shared=False
         )
         ListItem.objects.create(
             item_name="test item",
@@ -74,8 +73,6 @@ class TestViews(TestCase):
             created_on=timezone.now(),
             updated_on=timezone.now(),
             user_id_id=request.user.id,
-            shared_user="",
-            is_shared=False
         )
         item = ListItem.objects.create(
             item_name="test item",
@@ -85,7 +82,7 @@ class TestViews(TestCase):
             tag_color="#f9f9f9",
             due_date=timezone.now(),
             list=todo,
-            is_done=False
+            is_done=False,
         )
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
@@ -112,4 +109,3 @@ class TestViews(TestCase):
         request.POST = post
         response = template(request, 1)
         self.assertEqual(response.status_code, 200)
-
