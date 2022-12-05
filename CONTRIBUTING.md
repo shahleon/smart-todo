@@ -24,7 +24,7 @@ The following is a set of guidelines for contributing to our project and its pac
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [docummin@ncsu.edu](docummin@ncsu.edu).
+This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [hyu25@ncsu.edu](hyu25@ncsu.edu).
 
 
 ## How Can I Contribute?
