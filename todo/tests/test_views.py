@@ -35,7 +35,9 @@ class TestViews(TestCase):
             title_text="test list",
             created_on=timezone.now(),
             updated_on=timezone.now(),
-            user_id_id=self.user.id
+            user_id_id=self.user.id,
+            list=todo,
+            is_done=False,
         )
         ListItem.objects.create(
             item_name="test item",
@@ -83,7 +85,7 @@ class TestViews(TestCase):
             tag_color="#f9f9f9",
             due_date=timezone.now(),
             list=todo,
-            is_done=False,
+            is_done=False
         )
         post = request.POST.copy()  # to make it mutable
         post['todo'] = 1
