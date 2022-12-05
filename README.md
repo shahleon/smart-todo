@@ -116,7 +116,7 @@ the [good first issue](https://github.com/shahleon/smart-todo/issues?q=is%3Aissu
 
 ### License
 
-Distributed under the MIT License. See [LICENSE](License) for more information.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ### Developers (New Version)
 
